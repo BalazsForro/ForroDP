@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    'users' => [
+        'localAdmin' => [
+            'email' => env('ADMIN_LOCAL_LOGIN_EMAIL'),
+            'password' => env('ADMIN_LOCAL_LOGIN_PASSWORD'),
+        ]
+    ],
 ];
