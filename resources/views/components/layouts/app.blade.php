@@ -11,8 +11,11 @@
     @livewireStyles
 </head>
 <body>
-@include('layouts.navbar')
-<main class="container py-4">
+@include('components.layouts.navbar')
+<main @class([
+    'container',
+    'p-4' => !in_array(request()->route()->getName(), ['login', 'register'])
+    ])>
     {{ $slot }}
 </main>
 

@@ -1,43 +1,6 @@
-<?php
-
-use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-
-new class extends Component
-{
-    public ?string $email = null;
-    public ?string $password = null;
-
-    public bool $remember = true;
-
-    public function mount(): void
-    {
-        $this->email = config('app.users.localAdmin.email');
-        $this->password = config('app.users.localAdmin.password');
-    }
-
-    public function login(): void
-    {
-        $this->validate([
-            'email'    => 'required|email',
-            'password' => 'required|min:8',
-        ]);
-
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            $this->addError('loginError', "Wrong email or password.");
-            return;
-        }
-
-        session()->regenerate();
-
-        $this->redirectRoute('dashboard', navigate: true);
-    }
-};
-?>
-
-<div class="container vh-100 d-flex align-items-center justify-content-center">
+<div class="vh-100 d-flex align-items-center justify-content-center">
     <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm border-0">
+        <div class="card shadow border-1">
             <div class="card-body p-4">
                 <h3 class="text-center mb-4 fw-bold">Sign in</h3>
 
