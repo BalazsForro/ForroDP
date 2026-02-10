@@ -10,9 +10,6 @@ class Sensor extends Model
 {
     use SoftDeletes;
 
-    public const DATA_TYPE_INTEGER = 1;
-    public const DATA_TYPE_FLOAT = 2;
-
     protected $fillable = [
         'device_id',
         'name',

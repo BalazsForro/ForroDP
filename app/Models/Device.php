@@ -13,16 +13,15 @@ class Device extends Model
 {
     use SoftDeletes;
 
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 0;
+
     protected $fillable = [
         'owner_user_id',
         'name',
         'description',
         'is_active',
         'type',
-    ];
-
-    protected $casts = [
-        'is_active' => 'boolean',
     ];
 
     /**
@@ -70,5 +69,10 @@ class Device extends Model
     public function token(): HasOne
     {
         return $this->hasOne(DeviceToken::class);
+    }
+
+    public function sensors(): HasMany
+    {
+        return $this->hasMany(Sensor::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Device;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ return new class extends Migration
 
             $table->string('name', 45);
             $table->string('description', 255)->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->unsignedTinyInteger('is_active')->default(Device::STATUS_ACTIVE);
             $table->integer('type');
 
             $table->softDeletes();
