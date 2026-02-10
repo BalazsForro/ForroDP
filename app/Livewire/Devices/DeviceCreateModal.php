@@ -84,8 +84,6 @@ class DeviceCreateModal extends Component
         $this->dispatch('bs-modal-open', id: 'deviceCreateModal');
     }
 
-    //TODO: innen folyt kov atnezni kb ertem mi van de ez tul chat..
-
     /**
      * @throws \Throwable
      */
