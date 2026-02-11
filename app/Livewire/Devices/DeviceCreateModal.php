@@ -35,17 +35,6 @@ class DeviceCreateModal extends _device
         }
     }
 
-    private function generateKey($value): string
-    {
-        return str($value)
-            ->lower()
-            ->ascii()
-            ->replace([' ', '-', '_'], '_')
-            ->trim('_')
-            ->replaceMatches('/[^a-z0-9_]/', '')
-            ->toString();
-    }
-
     #[On('device-edit')]
     public function open(?int $deviceId = null): void
     {

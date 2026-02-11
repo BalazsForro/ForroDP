@@ -23,9 +23,12 @@ class SensorFactory extends Factory
         $min = $this->faker->numberBetween(0, 50);
         $max = $this->faker->numberBetween($min + 1, 200);
 
+        $name = $this->faker->words(2, true);
+
         return [
-            'name' => $this->faker->word(),
-            'key'  => $this->faker->unique()->slug(1),
+
+            'name' => $name,
+            'key'  => Device::generateKey($name),
 
             'description' => $this->faker->optional()->sentence(),
             'display_sort_order' => $this->faker->optional()->numberBetween(0, 10),

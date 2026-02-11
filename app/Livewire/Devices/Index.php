@@ -50,7 +50,11 @@ class Index extends Component
         }
 
         if ($this->search) {
-            $query->where('name', 'like', "%{$this->search}%");
+            $query->where('name', 'like', "%{$this->search}%")
+                ->orWhere('description', 'like', "%{$this->search}%")
+                ->orWhereHas('sensors', fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+                ->orWhereHas('sensors', fn($q) => $q->where('description', 'like', "%{$this->search}%"))
+                ->orWhereHas('sensors', fn($q) => $q->where('key', 'like', "%{$this->search}%"));
         }
 
         $this->devices = $query->get();

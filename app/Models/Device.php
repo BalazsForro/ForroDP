@@ -76,4 +76,15 @@ class Device extends Model
     {
         return $this->hasMany(Sensor::class);
     }
+
+    public static function generateKey($value): string
+    {
+        return str($value)
+            ->lower()
+            ->ascii()
+            ->replace([' ', '-', '_'], '_')
+            ->trim('_')
+            ->replaceMatches('/[^a-z0-9_]/', '')
+            ->toString();
+    }
 }
