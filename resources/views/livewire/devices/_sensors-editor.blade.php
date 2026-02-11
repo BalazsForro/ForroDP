@@ -99,7 +99,8 @@
                                 @endforeach
                             </select>
                             @error('sensors.'.$i.'.data_type')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @dump($errors)
                             @enderror
                         </div>
 
@@ -129,7 +130,7 @@
                             <div class="form-check">
                                 <input class="form-check-input"
                                        type="checkbox"
-                                       wire:model.live="sensors.{{ $i }}.is_required"
+                                       wire:model.live="sensors.{{ $i }}.required"
                                        id="sensorRequired{{ $i }}">
 
                                 <label class="form-check-label ms-1" for="sensorRequired{{ $i }}">

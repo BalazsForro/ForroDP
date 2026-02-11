@@ -48,5 +48,12 @@
                 @endauth
             </ul>
         </div>
+        <div class="d-flex align-items-center">
+            @if(auth()?->user()?->hasRole(App\Enums\Role::ADMIN->value))
+                <p class="text-muted mb-0">Admin</p>
+            @else
+                <p class="text-muted mb-0">User</p>
+            @endif
+        </div>
     </div>
 </nav>

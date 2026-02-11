@@ -7,36 +7,14 @@ use App\Enums\DeviceType;
 use App\Models\Device;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
-class DeviceCreateModal extends Component
+class DeviceCreateModal extends _device
 {
-    #[Validate('string|required|max:45')]
-    public string $deviceName = '';
-
-    #[Validate('nullable|string|max:255')]
-    public ?string $deviceDescription = null;
-
-    #[Validate('integer|required|in:1,2,3,4')]
-    public int $deviceType = DeviceType::ARDUINO->value;
-
-    #[Validate([
-        'sensors'                      => 'array',
-        'sensors.*.name'               => 'required|string|max:45',
-        'sensors.*.description'        => 'nullable|string|max:255',
-        'sensors.*.display_sort_order' => 'required|integer|min:0',
-        'sensors.*.is_required'        => 'boolean',
-        'sensors.*.min_value'          => 'nullable|numeric',
-        'sensors.*.max_value'          => 'nullable|numeric',
-        'sensors.*.unit_type'          => 'nullable|string|max:2',
-        'sensors.*.data_type'          => 'required|in:1,2',
-    ])]
-    public array $sensors = [];
-    public bool $sensorValidationFailed = false;
-
     protected $listeners = [
         'open-device-create' => 'open',
         'sensors-changed'    => 'onSensorsChanged',
@@ -68,17 +46,13 @@ class DeviceCreateModal extends Component
             ->toString();
     }
 
-    public function open(): void
+    #[On('device-edit')]
+    public function open(?int $deviceId = null): void
     {
         // reset state
         $this->resetValidation();
 
-        $this->deviceName = '';
-        $this->deviceDescription = null;
-        $this->deviceType = DeviceType::ARDUINO->value;
-        $this->sensorValidationFailed = false;
-
-        $this->sensors = [];
+        $this->resetDevice($deviceId);
 
         //calling js function to open modal
         $this->dispatch('bs-modal-open', id: 'deviceCreateModal');
@@ -87,7 +61,7 @@ class DeviceCreateModal extends Component
     /**
      * @throws \Throwable
      */
-    public function save(): void
+    public function save(?int $deviceId = null): void
     {
         $this->validate(
             rules     : $this->rules(),
@@ -97,13 +71,16 @@ class DeviceCreateModal extends Component
 
         $userId = Auth::id();
 
-        $device = DB::transaction(function () use ($userId) {
-            $device = Device::create([
-                'owner_user_id' => $userId,
-                'name'          => $this->deviceName,
-                'description'   => $this->deviceDescription ?: null,
-                'type'          => $this->deviceType,
-            ]);
+        //TODO: itt megcsinalni az updatet???? lehet jobb lenne na mind1
+        $device = DB::transaction(function () use ($userId, $deviceId) {
+            $device = Device::findOr($deviceId, function () use ($userId) {
+                Device::create([
+                    'owner_user_id' => $userId,
+                    'name'          => $this->deviceName,
+                    'description'   => $this->deviceDescription ?: null,
+                    'type'          => $this->deviceType,
+                ]);
+            });
 
             foreach ($this->sensors as $sensorData) {
                 $device->sensors()->create([
@@ -135,7 +112,7 @@ class DeviceCreateModal extends Component
             'sensors.*.name'               => 'required|string|max:45',
             'sensors.*.description'        => 'nullable|string|max:255',
             'sensors.*.display_sort_order' => 'required|integer|min:0',
-            'sensors.*.is_required'        => 'boolean',
+            'sensors.*.required'        => 'boolean',
             'sensors.*.min_value'          => 'nullable|numeric',
             'sensors.*.max_value'          => 'nullable|numeric',
             'sensors.*.unit_type'          => 'nullable|string|max:2',
@@ -150,28 +127,5 @@ class DeviceCreateModal extends Component
             'sensors.*.description'        => 'sensor description',
             'sensors.*.display_sort_order' => 'sensor sort order',
         ];
-    }
-
-    public function addSensor(): void
-    {
-        $this->sensors[] = [
-            'name'               => '',
-            'key'                => '',
-            'description'        => '',
-            'display_sort_order' => 0,
-            'is_required'        => true,
-            'min_value'          => null,
-            'max_value'          => null,
-            'unit_type'          => '',
-            'data_type'          => DataType::FLOAT->value,
-        ];
-
-        // calling js to enable tooltips on newly added sensors
-        $this->dispatch('bs-enable-tooltips');
-    }
-
-    public function removeSensor(int $index): void
-    {
-        unset($this->sensors[$index]);
     }
 }

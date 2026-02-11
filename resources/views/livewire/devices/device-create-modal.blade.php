@@ -33,7 +33,9 @@
                         <label class="form-label">Device type</label>
                         <select class="form-select">
                             @foreach (\App\Enums\DeviceType::cases() as $deviceType)
-                                <option value="{{ $deviceType->value }}">{{ $deviceType->getDisplayName() }}</option>
+                                <option value="{{ $deviceType->value }}" @selected($deviceType->value == $this->deviceType)>
+                                    {{ $deviceType->getDisplayName() }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -47,8 +49,13 @@
                         Cancel
                     </button>
 
-                    <button type="button" class="btn btn-success" wire:click="save" wire:loading.attr="disabled">
-                        <span wire:loading.remove>Create</span>
+                    <button type="button" class="btn btn-success" wire:click="{{$this->device ? 'update' : 'save'}}" wire:loading.attr="disabled">
+                        @if ($this->device)
+                            <span wire:loading.remove>Save</span>
+                        @else
+                            <span wire:loading.remove>Create</span>
+                        @endif
+
                         <span wire:loading>Saving...</span>
                     </button>
                 </div>

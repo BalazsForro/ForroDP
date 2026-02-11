@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('key', 45);
             $table->string('description', 255)->nullable();
             $table->unsignedTinyInteger('display_sort_order')->nullable();
-            $table->boolean('is_required')->default(false);
+            $table->boolean('required')->default(false);
 
             $table->integer('min_value')->nullable();
             $table->integer('max_value')->nullable();

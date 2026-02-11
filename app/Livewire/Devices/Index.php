@@ -36,9 +36,14 @@ class Index extends Component
         return view('livewire.devices.index');
     }
 
+    public function updatedSearch(): void
+    {
+        $this->loadDevices();
+    }
+
     public function loadDevices(): void
     {
-        $query = Device::query();
+        $query = Device::query()->with('sensors');
 
         if (!$this->currentUser->hasRole(ROLE::ADMIN->value)) {
             $query->where('owner_user_id', $this->currentUser->id);
@@ -51,9 +56,12 @@ class Index extends Component
         $this->devices = $query->get();
     }
 
-    public function updatedSearch(): void
+    public function edit(int $deviceId): void
     {
-        $this->loadDevices();
+        $device = Device::find($deviceId);
+        if ($device) {
+            $this->dispatch('device-edit', deviceId: $deviceId);
+        }
     }
 
 }

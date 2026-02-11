@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sensor extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'device_id',
@@ -16,7 +17,7 @@ class Sensor extends Model
         'key',
         'description',
         'display_sort_order',
-        'is_required',
+        'required',
         'min_value',
         'max_value',
         'unit_type',
@@ -24,7 +25,7 @@ class Sensor extends Model
     ];
 
     protected $casts = [
-        'is_required' => 'boolean',
+        'required' => 'boolean',
     ];
 
     /**
