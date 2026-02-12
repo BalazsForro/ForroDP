@@ -18,10 +18,8 @@ return new class extends Migration
                 ->constrained('devices')
                 ->cascadeOnDelete()
                 ->unique();
-
-            $table->string('prefix', 10);
+            $table->string('prefix', 9);
             $table->string('token_hash', 64)->unique();
-            $table->string('name');
             $table->unsignedTinyInteger('rate_limit')->default(60);
             $table->timestamp('last_used_at')->nullable();
 

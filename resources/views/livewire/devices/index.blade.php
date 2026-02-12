@@ -39,12 +39,13 @@
                                 </small>
                                 </div>
                             </div>
-                            <span>
+                            <span class="d-grid gap-2">
                                 @if($device->is_active)
                                     <span class="badge bg-success">Active</span>
                                 @else
                                     <span class="badge bg-secondary">Inactive</span>
                                 @endif
+                                <span class="badge border text-dark bg-light">{{ $device->token?->prefix }}</span>
                             </span>
                         </div>
                     </button>
@@ -85,4 +86,5 @@
     </div>
 
     <livewire:devices.device-create-modal />
+    @include('livewire.devices.show-token-modal')
 </div>

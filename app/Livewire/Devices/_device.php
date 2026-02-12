@@ -25,7 +25,10 @@ class _device extends _sensor
     protected function resetDevice(?int $deviceId = null): void
     {
         if ($deviceId) {
-            $this->getDevice($deviceId);
+            $this->device = $this->getDevice($deviceId);
+        }
+        else {
+            $this->device = null;
         }
 
         if ($this->device) {
@@ -44,9 +47,9 @@ class _device extends _sensor
         }
     }
 
-    protected function getDevice(int $deviceId): void
+    protected function getDevice(int $deviceId): Device
     {
-        $this->device = Device::findOrFail($deviceId);
+        return Device::findOrFail($deviceId);
     }
 }
 

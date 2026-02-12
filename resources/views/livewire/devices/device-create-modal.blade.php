@@ -49,7 +49,7 @@
                         Cancel
                     </button>
 
-                    <button type="button" class="btn btn-success" wire:click="{{$this->device ? 'update' : 'save'}}" wire:loading.attr="disabled">
+                    <button type="button" class="btn btn-success" wire:click="save({{ $this->device?->id }})" wire:loading.attr="disabled">
                         @if ($this->device)
                             <span wire:loading.remove>Save</span>
                         @else

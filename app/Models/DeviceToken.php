@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -9,10 +10,12 @@ use Illuminate\Support\Str;
 
 class DeviceToken extends Model
 {
+    /**  */
+    use hasFactory;
     protected $fillable = [
+        'device_id',
         'prefix',
         'token_hash',
-        'name',
         'rate_limit',
         'last_used_at',
     ];
@@ -45,6 +48,11 @@ class DeviceToken extends Model
     public static function hashToken(string $plainToken): string
     {
         return hash('sha256', $plainToken);
+    }
+
+    public static function createPrefix(string $plainToken): string
+    {
+        return substr($plainToken, 0, 3) . '...' . substr($plainToken, -3) ;
     }
 
     /*$incomingToken = $request->bearerToken();

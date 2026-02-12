@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\DeviceTokenAuth;
+use App\Models\DeviceToken;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -8,6 +10,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -15,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
         RedirectIfAuthenticated::redirectUsing(function () {
             return route('dashboard');
         });
+
+        $middleware->alias([
+            'device.token' => DeviceTokenAuth::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

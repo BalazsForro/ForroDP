@@ -19,7 +19,35 @@ document.addEventListener('livewire:init', () => {
     Livewire.on('bs-enable-tooltips', () => {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    })
+    });
+
+    Livewire.on('bs-show-token', ({token}) => {
+        const el = document.getElementById('tokenModal');
+        if (!el) return;
+
+        const tokenEl = el.querySelector('#token');
+        if (tokenEl) {
+            tokenEl.value = token;
+        }
+
+        const modal = bootstrap.Modal.getOrCreateInstance(el, {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        el.querySelector('#copyTokenBtn')?.addEventListener('click', () => {
+            const token = document.getElementById('token')?.value;
+            if (token) {
+                navigator.clipboard.writeText(token);
+
+                setTimeout(() => {
+                    Livewire.dispatch('bs-toast-show', { message: 'Token copied to clipboard' });
+                })
+            }
+        });
+
+        modal.show();
+    });
 
     //Toast
     initToast();

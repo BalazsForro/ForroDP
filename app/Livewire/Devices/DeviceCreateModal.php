@@ -5,6 +5,7 @@ namespace App\Livewire\Devices;
 use App\Enums\DataType;
 use App\Enums\DeviceType;
 use App\Models\Device;
+use App\Models\DeviceToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -31,7 +32,7 @@ class DeviceCreateModal extends _device
         if (str_starts_with($propertyName, 'sensors.') && str_ends_with($propertyName, '.name')) {
             $index = (int)explode('.', $propertyName)[1];
 
-            $this->sensors[$index]['key'] = $this->generateKey($value);
+            $this->sensors[$index]['key'] = Device::generateKey($value);
         }
     }
 
@@ -60,22 +61,34 @@ class DeviceCreateModal extends _device
 
         $userId = Auth::id();
 
-        //TODO: itt megcsinalni az updatet???? lehet jobb lenne na mind1
-        $device = DB::transaction(function () use ($userId, $deviceId) {
-            $device = Device::findOr($deviceId, function () use ($userId) {
-                Device::create([
+        $token = is_null($deviceId) ? DeviceToken::makePlainToken() : '';
+
+        $device = DB::transaction(function () use ($userId, $deviceId, &$token) {
+            if ($deviceId) {
+                $device = Device::where('owner_user_id', $userId)->findOrFail($deviceId);
+                $device->update([
+                    'name'        => $this->deviceName,
+                    'description' => $this->deviceDescription ?: null,
+                    'type'        => $this->deviceType,
+                ]);
+            }
+            else {
+                $device = Device::create([
                     'owner_user_id' => $userId,
                     'name'          => $this->deviceName,
                     'description'   => $this->deviceDescription ?: null,
                     'type'          => $this->deviceType,
                 ]);
-            });
+
+                $device->token()->create([
+                    'prefix'     => DeviceToken::createPrefix($token),
+                    'token_hash' => DeviceToken::hashToken($token),
+                    'rate_limit' => 60,
+                ]);
+            }
 
             foreach ($this->sensors as $sensorData) {
-                $device->sensors()->create([
-                    ...$sensorData,
-                    'device_id' => $device->id,
-                ]);
+                $device->sensors()->create($sensorData);
             }
 
             return $device;
@@ -84,10 +97,14 @@ class DeviceCreateModal extends _device
         // calling js function to close modal
         $this->dispatch('bs-modal-close', id: 'deviceCreateModal');
 
-        // Index: update table
-        $this->dispatch('device-created', deviceId: $device->id);
+        if (is_null($deviceId)) {
+            $this->dispatch('bs-show-token', token: $token);
+        }
 
-        $this->dispatch('bs-toast-show', message: 'Device created successfully');
+        // Index: update table
+        $this->dispatch('device-created', deviceId: $device?->id);
+
+        $this->dispatch('bs-toast-show', message: "Device was " . (is_null($deviceId) ? 'created' : 'updated') . " successfully");
     }
 
     protected function rules(): array
