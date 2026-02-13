@@ -70,6 +70,10 @@
                                 </div>
                             </div>
                             <div class="col-md-4 text-end">
+                                <button class="btn btn-sm btn-outline-primary" title="Edit"
+                                        wire:click="dispatch('open-measurement',{deviceId:  {{ $device->id }}})">
+                                    <i class="bi bi-activity"></i> Measurement
+                                </button>
                                 <button class="btn btn-sm btn-outline-primary" title="Edit" wire:click="edit({{ $device->id }})">
                                     <i class="bi bi-pencil"></i> Edit
                                 </button>
@@ -86,5 +90,6 @@
     </div>
 
     <livewire:devices.device-create-modal />
+    <livewire:measurement.show/>
     @include('livewire.devices.show-token-modal')
 </div>

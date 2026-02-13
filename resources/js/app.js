@@ -5,7 +5,10 @@ document.addEventListener('livewire:init', () => {
     Livewire.on('bs-modal-open', ({ id }) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const modal = bootstrap.Modal.getOrCreateInstance(el);
+        const modal = bootstrap.Modal.getOrCreateInstance(el, {
+            backdrop: 'static',
+            keyboard: false,
+        });
         modal.show();
     });
 
