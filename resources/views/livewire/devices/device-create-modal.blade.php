@@ -48,13 +48,18 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Cancel
                     </button>
-
-                    <button type="button" class="btn btn-success" wire:click="save({{ $this->device?->id }})" wire:loading.attr="disabled">
-                        @if ($this->device)
-                            <span wire:loading.remove>Save</span>
-                        @else
-                            <span wire:loading.remove>Create</span>
-                        @endif
+                    <button
+                        type="button"
+                        class="btn btn-success"
+                        wire:click="{{ $device
+                            ? 'update(' . $device->id . ')'
+                            : 'save'
+                        }}"
+                        wire:loading.attr="disabled"
+                    >
+                        <span wire:loading.remove>
+                            {{ $device ? 'Save' : 'Create' }}
+                        </span>
 
                         <span wire:loading>Saving...</span>
                     </button>

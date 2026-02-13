@@ -51,7 +51,7 @@ class DeviceCreateModal extends _device
     /**
      * @throws \Throwable
      */
-    public function save(?int $deviceId = null): void
+    public function save(): void
     {
         $this->validate(
             rules     : $this->rules(),
@@ -61,31 +61,22 @@ class DeviceCreateModal extends _device
 
         $userId = Auth::id();
 
-        $token = is_null($deviceId) ? DeviceToken::makePlainToken() : '';
+        $token = DeviceToken::makePlainToken();
 
-        $device = DB::transaction(function () use ($userId, $deviceId, &$token) {
-            if ($deviceId) {
-                $device = Device::find($deviceId);
-                $device->update([
-                    'name'        => $this->deviceName,
-                    'description' => $this->deviceDescription ?: null,
-                    'type'        => $this->deviceType,
-                ]);
-            }
-            else {
-                $device = Device::create([
-                    'owner_user_id' => $userId,
-                    'name'          => $this->deviceName,
-                    'description'   => $this->deviceDescription ?: null,
-                    'type'          => $this->deviceType,
-                ]);
+        $device = DB::transaction(function () use ($userId, &$token) {
 
-                $device->token()->create([
-                    'prefix'     => DeviceToken::createPrefix($token),
-                    'token_hash' => DeviceToken::hashToken($token),
-                    'rate_limit' => 60,
-                ]);
-            }
+            $device = Device::create([
+                'owner_user_id' => $userId,
+                'name'          => $this->deviceName,
+                'description'   => $this->deviceDescription ?: null,
+                'type'          => $this->deviceType,
+            ]);
+
+            $device->token()->create([
+                'prefix'     => DeviceToken::createPrefix($token),
+                'token_hash' => DeviceToken::hashToken($token),
+                'rate_limit' => 60,
+            ]);
 
             foreach ($this->sensors as $sensorData) {
                 $device->sensors()->create($sensorData);
@@ -97,14 +88,37 @@ class DeviceCreateModal extends _device
         // calling js function to close modal
         $this->dispatch('bs-modal-close', id: 'deviceCreateModal');
 
-        if (!empty($token)) {
-            $this->dispatch('bs-show-token', token: $token);
-        }
+        $this->dispatch('bs-show-token', token: $token);
 
         // Index: update table
         $this->dispatch('device-created', deviceId: $device?->id);
 
-        $this->dispatch('bs-toast-show', message: "Device was " . (is_null($deviceId) ? 'created' : 'updated') . " successfully");
+        $this->dispatch('bs-toast-show', message: "Device was created successfully");
+    }
+
+    public function update(?int $deviceId = null)
+    {
+        $userId = Auth::id();
+
+        $device = DB::transaction(function () use ($userId, $deviceId) {
+
+            $device = Device::find($deviceId);
+            $device->update([
+                'name'        => $this->deviceName,
+                'description' => $this->deviceDescription ?: null,
+                'type'        => $this->deviceType,
+            ]);
+
+            foreach ($this->sensors as $sensorData) {
+                $device->sensors()->update($sensorData);
+            }
+            return $device;
+        });
+
+        // Index: update table
+        $this->dispatch('device-created', deviceId: $device?->id);
+
+        $this->dispatch('bs-toast-show', message: "Device was updated successfully");
     }
 
     protected function rules(): array
