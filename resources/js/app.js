@@ -37,12 +37,13 @@ document.addEventListener('livewire:init', () => {
 
         el.querySelector('#copyTokenBtn')?.addEventListener('click', () => {
             const token = document.getElementById('token')?.value;
+            console.log(token);
             if (token) {
                 navigator.clipboard.writeText(token);
 
                 setTimeout(() => {
                     Livewire.dispatch('bs-toast-show', { message: 'Token copied to clipboard' });
-                })
+                }, 500)
             }
         });
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\DataType;
 use App\Models\Device;
 use App\Models\DeviceToken;
 use App\Models\Sensor;
@@ -27,15 +28,39 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             $device = Device::factory()->create();
 
+            DeviceToken::factory()->for($device)->create();
+
             Sensor::factory()
                 ->count(rand(0, 5))
                 ->for($device)
                 ->create();
         }
 
-        $device = Device::factory()->create();
+        $device = Device::factory()->create([
+            'name' => 'Test device',
+        ]);
 
-        Sensor::factory()->for($device)->create();
+        Sensor::factory()->for($device)->create([
+            'name'        => 'Test sensor',
+            'key'         => Device::generateKey('Test sensor'),
+            'description' => 'Test sensor description',
+            'required'    => true,
+            'unit_type'   => 'Celsius',
+            'data_type'   => DataType::FLOAT,
+            'min_value'   => 0,
+            'max_value'   => 100,
+        ]);
+
+        Sensor::factory()->for($device)->create([
+            'name'        => 'Test sensor 2',
+            'key'         => Device::generateKey('Test sensor 2'),
+            'description' => 'Test sensor 2 description',
+            'required'    => false,
+            'unit_type'   => 'Celsius',
+            'data_type'   => DataType::FLOAT,
+            'min_value'   => 0,
+            'max_value'   => 100,
+        ]);
 
         $token = DeviceToken::factory()->for($device)->create([
             'token_hash' => DeviceToken::hashToken("nemtudom"),

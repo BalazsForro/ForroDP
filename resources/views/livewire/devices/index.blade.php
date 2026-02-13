@@ -45,7 +45,7 @@
                                 @else
                                     <span class="badge bg-secondary">Inactive</span>
                                 @endif
-                                <span class="badge border text-dark bg-light">{{ $device->token?->prefix }}</span>
+                                <span class="badge border text-dark bg-light">{{ $device->token?->prefix ?? ' ' }}</span>
                             </span>
                         </div>
                     </button>

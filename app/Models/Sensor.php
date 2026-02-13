@@ -18,10 +18,10 @@ class Sensor extends Model
         'description',
         'display_sort_order',
         'required',
-        'min_value',
-        'max_value',
         'unit_type',
         'data_type',
+        'min_value',
+        'max_value',
     ];
 
     protected $casts = [

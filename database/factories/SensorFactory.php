@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\DataType;
 use App\Models\Device;
 use App\Models\Sensor;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -39,7 +40,7 @@ class SensorFactory extends Factory
             'max_value' => $max,
 
             'unit_type' => $this->faker->optional()->randomElement(['°C', '%', 'bar', 'ppm']),
-            'data_type' => $this->faker->numberBetween(0, 3),
+            'data_type' => $this->faker->numberBetween(1, count(DataType::cases())),
 
             'deleted_at' => null,
         ];

@@ -14,4 +14,12 @@ enum DataType: int
             self::FLOAT   => 'Float',
         };
     }
+
+    public function getValidationRule(): ?string
+    {
+        return match ($this) {
+            self::INTEGER => 'integer',
+            self::FLOAT   => 'numeric',
+        };
+    }
 }

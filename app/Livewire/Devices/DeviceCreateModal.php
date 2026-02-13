@@ -65,7 +65,7 @@ class DeviceCreateModal extends _device
 
         $device = DB::transaction(function () use ($userId, $deviceId, &$token) {
             if ($deviceId) {
-                $device = Device::where('owner_user_id', $userId)->findOrFail($deviceId);
+                $device = Device::find($deviceId);
                 $device->update([
                     'name'        => $this->deviceName,
                     'description' => $this->deviceDescription ?: null,
@@ -97,7 +97,7 @@ class DeviceCreateModal extends _device
         // calling js function to close modal
         $this->dispatch('bs-modal-close', id: 'deviceCreateModal');
 
-        if (is_null($deviceId)) {
+        if (!empty($token)) {
             $this->dispatch('bs-show-token', token: $token);
         }
 
@@ -114,15 +114,7 @@ class DeviceCreateModal extends _device
             'deviceDescription' => 'nullable|string|max:255',
             'deviceType'        => 'integer|required|in:1,2,3,4',
 
-            'sensors'                      => 'array',
-            'sensors.*.name'               => 'required|string|max:45',
-            'sensors.*.description'        => 'nullable|string|max:255',
-            'sensors.*.display_sort_order' => 'required|integer|min:0',
-            'sensors.*.required'        => 'boolean',
-            'sensors.*.min_value'          => 'nullable|numeric',
-            'sensors.*.max_value'          => 'nullable|numeric',
-            'sensors.*.unit_type'          => 'nullable|string|max:2',
-            'sensors.*.data_type'          => 'required|in:1,2',
+            ...self::SENSORS_VALIDATE
         ];
     }
 
@@ -132,6 +124,11 @@ class DeviceCreateModal extends _device
             'sensors.*.name'               => 'sensor name',
             'sensors.*.description'        => 'sensor description',
             'sensors.*.display_sort_order' => 'sensor sort order',
+            'sensors.*.required'           => 'sensor required',
+            'sensors.*.min_value'          => 'sensor min value',
+            'sensors.*.max_value'          => 'sensor max value',
+            'sensors.*.unit_type'          => 'sensor unit type',
+            'sensors.*.data_type'          => 'sensor data type',
         ];
     }
 }

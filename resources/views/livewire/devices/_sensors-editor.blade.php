@@ -100,7 +100,6 @@
                             </select>
                             @error('sensors.'.$i.'.data_type')
                                 <div class="invalid-feedback">{{ $message }}</div>
-                            @dump($errors)
                             @enderror
                         </div>
 

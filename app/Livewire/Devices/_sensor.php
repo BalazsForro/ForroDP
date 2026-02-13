@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class _sensor extends Component
 {
-    #[Validate([
+    public const SENSORS_VALIDATE = [
         'sensors'                      => 'array',
         'sensors.*.name'               => 'required|string|max:45',
         'sensors.*.description'        => 'nullable|string|max:255',
@@ -19,9 +19,11 @@ class _sensor extends Component
         'sensors.*.required'           => 'boolean',
         'sensors.*.min_value'          => 'nullable|numeric',
         'sensors.*.max_value'          => 'nullable|numeric',
-        'sensors.*.unit_type'          => 'nullable|string|max:2',
+        'sensors.*.unit_type'          => 'nullable|string|max:15',
         'sensors.*.data_type'          => 'required|int|in:1,2,3',
-    ])]
+    ];
+
+    #[Validate(self::SENSORS_VALIDATE)]
     public array $sensors = [];
 
     public function addSensor(): void

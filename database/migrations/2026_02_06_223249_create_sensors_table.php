@@ -27,7 +27,7 @@ return new class extends Migration
             $table->integer('min_value')->nullable();
             $table->integer('max_value')->nullable();
 
-            $table->string('unit_type')->nullable();
+            $table->string('unit_type',15)->nullable();
             $table->unsignedTinyInteger('data_type');
 
             $table->softDeletes();
