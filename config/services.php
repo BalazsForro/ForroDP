@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'device' => [
+        'endpoint' => env('DEVICE_ENDPOINT'),
+        'token'    => env('DEVICE_TOKEN'),
+    ],
+
 ];

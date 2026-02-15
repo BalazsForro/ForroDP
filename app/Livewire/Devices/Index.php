@@ -57,6 +57,8 @@ class Index extends Component
                 ->orWhereHas('sensors', fn($q) => $q->where('key', 'like', "%{$this->search}%"));
         }
 
+
+
         $this->devices = $query->latest()->get();
     }
 

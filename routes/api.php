@@ -6,8 +6,6 @@ use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::middleware('device.token')->group(function () {
     Route::get('/get/devices', function (Request $request) {
         $deviceToken = $request->attributes->get('deviceToken');

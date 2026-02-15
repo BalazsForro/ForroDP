@@ -4,16 +4,31 @@
             <h4 class="m-0 p-0">Devices</h4>
         </div>
 
-        <div class="col-5">
+        <div class="col-2 bg-danger d-flex justify-content-between gap-2">
             <input
                 type="text"
-                class="form-control w-50"
+                class="form-control w-100"
                 placeholder="Search..."
                 wire:model.live.debounce.400ms="search"
             >
         </div>
 
-        <div class="col-1 offset-5 d-flex justify-content-end">
+        <div class="col-6 bg-secondary d-flex justify-content-center gap-2">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+
+        <div class="col-3 bg-black d-flex justify-content-end">
             <button
                 class="btn btn-success"
                 wire:click="$dispatch('open-device-create')"
