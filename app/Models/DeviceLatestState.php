@@ -12,11 +12,7 @@ class DeviceLatestState extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'value'
-    ];
-
-    protected $casts = [
-        'value' => 'array'
+        'measurement_id'
     ];
 
     /**
@@ -25,5 +21,10 @@ class DeviceLatestState extends Model
     public function device(): BelongsTo
     {
         return $this->belongsTo(Device::class);
+    }
+
+    public function measurement(): BelongsTo
+    {
+        return $this->belongsTo(Measurement::class);
     }
 }

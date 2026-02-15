@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\DataType;
 use App\Models\Measurement;
-use App\Models\Sensor;
+use App\Services\DeviceLatestService;
 use App\Services\MeasurementService;
 use App\Services\MeasurementValueService;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class DeviceController extends Controller
 {
-    public function update(Request $request, MeasurementService $measurementService, MeasurementValueService $measurementValueService): JsonResponse
+    public function update(
+        Request                 $request,
+        MeasurementService      $measurementService,
+        MeasurementValueService $measurementValueService,
+        DeviceLatestService     $deviceLatestStateService
+    ): JsonResponse
     {
         $deviceToken = $request->attributes->get('deviceToken');
 
@@ -56,15 +61,11 @@ class DeviceController extends Controller
 
         $validatedRequest = $validator->validated();
 
-        $measurement = Measurement::create([
-            'device_id'   => $device->id,
-            'raw_payload' => json_encode($validatedRequest),
-            'is_valid'    => json_last_error() === JSON_ERROR_NONE,
-        ]);
-
-        $measurementService->storeFromDevicePayload($device, $validatedRequest);
+        $measurement = $measurementService->storeFromDevicePayload($device, $validatedRequest);
 
         $measurementValueService->createFromPayload($measurement, $sensors, $validatedRequest);
+
+        $deviceLatestStateService->createOrUpdate($device, $measurement);
 
         return response()->json([
             ...$validatedRequest,

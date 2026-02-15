@@ -17,7 +17,10 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->primary();
 
-            $table->json('value')->comment('JSON encoded');
+            $table->foreignId('measurement_id')
+                ->constrained('measurements')
+                ->noActionOnDelete();
+
             $table->timestamps();
         });
     }
