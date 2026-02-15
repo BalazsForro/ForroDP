@@ -98,11 +98,7 @@ class DeviceCreateModal extends _device
 
     public function update(?int $deviceId = null)
     {
-        $userId = Auth::id();
-
-        $sensors = $this->sensors;
-
-        $device = DB::transaction(function () use ($userId, $deviceId, $sensors) {
+        $device = DB::transaction(function () use ($deviceId) {
 
             $device = Device::find($deviceId);
             $device->update([
@@ -111,7 +107,7 @@ class DeviceCreateModal extends _device
                 'type'        => $this->deviceType,
             ]);
 
-            foreach ($sensors as $sensorData) {
+            foreach ($this->sensors as $sensorData) {
                 $device->sensors()->where('key', $sensorData['key'])->update($sensorData);
             }
 
