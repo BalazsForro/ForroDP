@@ -31,12 +31,25 @@
                             data-bs-target="#collapse-{{ $device->id }}" aria-expanded="false"
                             aria-controls="collapse-{{ $device->id }}">
                         <div class="d-flex justify-content-between w-100 me-3">
-                            <div class="col-5">
-                                <div class="row p-2 col-12">
-                                <span><strong>{{ $device->name }}</strong></span>
-                                <small class="text-muted">
-                                    {{ \App\Enums\DeviceType::from($device->type)->getDisplayName() }}
-                                </small>
+                            <div class="col-10">
+                                <div class="row p-2 col-10">
+                                <span><strong>{{ $device->name }}</strong>
+                                @isAdmin()
+                                    <br>
+                                    <span><b>Name</b>: {{ $device->owner->name }}, <b>Email</b>: {{ $device->owner->email }}</span>
+                                @endisAdmin
+                                </span>
+
+                                </div>
+                                <div class="row p-2 col-3">
+                                    <small class="text-muted d-flex justify-content-between">
+                                        {{ \App\Enums\DeviceType::from($device->type)->getDisplayName() }}
+                                        @isOwner($device)
+                                        <span class="badge bg-success">Owner</span>
+                                        @else
+                                            <span class="badge bg-info">Shared</span>
+                                            @endisOwner
+                                    </small>
                                 </div>
                             </div>
                             <span class="d-grid gap-2">
@@ -69,14 +82,26 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-sm btn-outline-primary" title="Edit"
+                            <div class="col-md-4 d-grid gap-1" style="grid-template-columns: 1fr 1fr;">
+                                <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
                                         wire:click="dispatch('open-measurement',{deviceId:  {{ $device->id }}})">
                                     <i class="bi bi-activity"></i> Measurement
                                 </button>
-                                <button class="btn btn-sm btn-outline-primary" title="Edit" wire:click="edit({{ $device->id }})">
+
+                                @canWrite($device)
+                                <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
+                                        wire:click="edit({{ $device->id }})">
                                     <i class="bi bi-pencil"></i> Edit
                                 </button>
+                                @endcanWrite()
+
+                                @isOwner($device)
+                                <button class="btn btn-sm btn-outline-info w-100" title="Edit"
+                                        wire:click="dispatch('open-share',{deviceId:  {{ $device->id }}})">
+                                    <i class="bi bi-share"></i> Share device
+                                </button>
+                                @endisOwner()
+
                             </div>
                         </div>
                     </div>
@@ -89,7 +114,8 @@
         @endforelse
     </div>
 
-    <livewire:devices.device-create-modal />
+    <livewire:devices.create-modal/>
+    <livewire:devices.share-modal/>
     <livewire:measurement.show/>
     @include('livewire.devices.show-token-modal')
 </div>

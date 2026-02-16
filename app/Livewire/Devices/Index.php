@@ -43,10 +43,18 @@ class Index extends Component
 
     public function loadDevices(): void
     {
-        $query = Device::query()->with('sensors');
+        $query = Device::query()->with([
+            'sensors',
+            'shares.sharedUser',
+            'shares.sharedBy',
+        ]);
 
         if (!$this->currentUser->hasRole(ROLE::ADMIN->value)) {
             $query->where('owner_user_id', $this->currentUser->id);
+
+            $query->orWhereHas('sharedUsers', function ($q) {
+                $q->where('users.id', $this->currentUser->id);
+            });
         }
 
         if ($this->search) {
@@ -56,8 +64,6 @@ class Index extends Component
                 ->orWhereHas('sensors', fn($q) => $q->where('description', 'like', "%{$this->search}%"))
                 ->orWhereHas('sensors', fn($q) => $q->where('key', 'like', "%{$this->search}%"));
         }
-
-
 
         $this->devices = $query->latest()->get();
     }

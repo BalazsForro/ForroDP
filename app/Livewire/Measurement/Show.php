@@ -3,6 +3,7 @@
 namespace App\Livewire\Measurement;
 
 use App\Models\Device;
+use App\Models\DeviceLatestState;
 use App\Models\MeasurementValue;
 use App\Models\Sensor;
 use Illuminate\Support\Collection;
@@ -49,36 +50,42 @@ class Show extends Component
      *
      * Megoldás: subquery-vel megkeressük szenzoronként a max(id)-t a device mérésein belül.
      */
-    public function getCurrentStateProperty(): Collection
+    public function getCurrentStateProperty(): \Illuminate\Support\Collection
     {
         if (!$this->deviceId) {
             return collect();
         }
 
-        $latestIdsPerSensor = MeasurementValue::query()
-            ->selectRaw('measurement_values.sensor_id, MAX(measurement_values.id) as max_id')
-            ->join('measurements', 'measurements.id', '=', 'measurement_values.measurement_id')
-            ->where('measurements.device_id', $this->deviceId)
-            ->groupBy('measurement_values.sensor_id');
+        $latestMeasurementId = DeviceLatestState::query()
+            ->where('device_id', $this->deviceId)
+            ->value('measurement_id');
 
-        $latestRows = MeasurementValue::query()
-            ->with(['measurement'])
-            ->joinSub($latestIdsPerSensor, 't', function ($join) {
-                $join->on('measurement_values.id', '=', 't.max_id');
-            })
+        if (!$latestMeasurementId) {
+            return $this->sensors->map(fn (Sensor $sensor) => (object)[
+                'sensor' => $sensor,
+                'value' => null,
+                'measured_at' => null,
+                'is_valid' => null,
+                'measurement_id' => null,
+                'measurement_value_id' => null,
+            ]);
+        }
+
+        $rows = MeasurementValue::query()
+            ->with('measurement:id,is_valid,created_at')
+            ->where('measurement_id', $latestMeasurementId)
             ->get()
             ->keyBy('sensor_id');
 
-        // alakítsuk egy “view model” kollekcióvá a szenzorok sorrendjében
-        return $this->sensors->map(function (Sensor $sensor) use ($latestRows) {
-            $row = $latestRows->get($sensor->id);
+        return $this->sensors->map(function (Sensor $sensor) use ($rows, $latestMeasurementId) {
+            $row = $rows->get($sensor->id);
 
             return (object)[
                 'sensor'               => $sensor,
                 'value'                => $row?->value,
                 'measured_at'          => $row?->measurement?->created_at,
                 'is_valid'             => $row?->measurement?->is_valid,
-                'measurement_id'       => $row?->measurement_id,
+                'measurement_id'       => $latestMeasurementId,
                 'measurement_value_id' => $row?->id,
             ];
         });

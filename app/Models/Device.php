@@ -51,10 +51,8 @@ class Device extends Model
             'device_shares',
             'device_id',
             'shared_with_user_id'
-        )->as('share')
-            ->withPivot([
+        )->withPivot([
                 'permission',
-                'status',
                 'accepted_at',
             ])->withTimestamps();
     }

@@ -28,8 +28,9 @@ class SimulateDeviceData extends Command
      */
     public function handle(): void
     {
+        // php artisan schedule:work
         $token = config('services.device.token'); // vagy .env-ből
-
+/*
         try {
             $response = Http::withToken($token)
                 ->withHeaders([
@@ -39,13 +40,11 @@ class SimulateDeviceData extends Command
                     'test_sensor_2' => rand(0, 100),
                     'test_sensor'   => rand(0, 100),
                 ]);
-
-            $asd = '';
         }catch (ConnectionException $e){
             dd($e->getMessage());
-        }
+        }*/
 
-        /*$response = Http::withToken($token)
+        $response = Http::withToken($token)
             ->acceptJson()
             ->post(config('services.device.endpoint'), [
                 'test_sensor_2' => rand(0, 100),
@@ -55,7 +54,7 @@ class SimulateDeviceData extends Command
         if ($response->failed()) {
             $this->error('Request failed: '.$response->body());
             return;
-        }*/
+        }
 
         $this->info('Data sent successfully.');
     }
