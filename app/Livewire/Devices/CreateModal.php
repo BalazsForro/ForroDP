@@ -107,7 +107,11 @@ class CreateModal extends _device
             ]);
 
             foreach ($this->sensors as $sensorData) {
-                $device->sensors()->where('key', $sensorData['key'])->update($sensorData);
+                $sensor = $device->sensors()
+                    ->where('key', $sensorData['key'])
+                    ->first();
+
+                $sensor ? $sensor->update($sensorData) : $device->sensors()->create($sensorData);
             }
 
             return $device;

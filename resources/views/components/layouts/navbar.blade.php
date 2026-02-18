@@ -7,53 +7,60 @@
         </button>
 
         <div class="collapse navbar-collapse" id="mainNav">
-            <ul @class(['navbar-nav', 'ms-auto' => !auth()->check()])>
+            <ul class="navbar-nav">
                 @auth()
                     <li class="nav-item">
-                        <a @class([
-                            'nav-link',
-                            'active' => request()->routeIs('dashboard')
-                        ]) href="{{ route('dashboard') }}">Home</a>
+                        <a @class(['nav-link', 'active' => request()->routeIs('dashboard')]) href="{{ route('dashboard') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a @class([
-                            'nav-link',
-                            'active' => request()->routeIs('devices')
-                        ]) href="/devices">Devices</a>
-
-                    <li class="nav-item">
-                        {{--note replace lated--}}
-                        <a class="nav-link" href="{{ route('logout') }}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            Logout
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
+                        <a @class(['nav-link', 'active' => request()->routeIs('devices')]) href="{{ route('devices') }}">Devices</a>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a @class([
-                            'nav-link',
-                            'active' => request()->routeIs('login')
-                        ])  href="{{ route('login') }}">Login</a>
+                        <a @class(['nav-link', 'active' => request()->routeIs('login')]) href="{{ route('login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a @class([
-                            'nav-link',
-                            'active' => request()->routeIs('register')
-                        ])  href="{{ route('register') }}">Register</a>
+                        <a @class(['nav-link', 'active' => request()->routeIs('register')]) href="{{ route('register') }}">Register</a>
                     </li>
                 @endauth
             </ul>
-        </div>
-        <div class="d-flex align-items-center">
-            @if(auth()?->user()?->hasRole(App\Enums\Role::ADMIN->value))
-                <p class="text-muted mb-0">Admin</p>
-            @else
-                <p class="text-muted mb-0">User</p>
-            @endif
+
+            @auth()
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 py-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="rounded-circle bg-secondary bg-opacity-10 border d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
+                                <i class="bi bi-person text-secondary"></i>
+                            </span>
+                            <span class="d-none d-lg-inline">{{ auth()->user()->name }}</span>
+                            @if(auth()->user()->hasRole(App\Enums\Role::ADMIN->value))
+                                <span class="badge text-bg-warning d-none d-lg-inline" style="font-size:0.65rem;">Admin</span>
+                            @endif
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <span class="dropdown-item-text small text-muted">{{ auth()->user()->email }}</span>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item @if(request()->routeIs('profile')) active @endif" href="{{ route('profile') }}">
+                                    <i class="bi bi-person-gear me-2"></i>Edit Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            @endauth
         </div>
     </div>
 </nav>

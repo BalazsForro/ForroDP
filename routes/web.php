@@ -4,6 +4,7 @@ use App\Enums\Role;
 use App\Livewire\Dashboard;
 use App\Livewire\Devices\Index as DevicesIndex;
 use App\Livewire\User\Login;
+use App\Livewire\User\Profile;
 use App\Livewire\User\Register;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::middleware(['auth'])
         })->name('logout');
 
         Route::get('/devices', DevicesIndex::class)->name('devices');
+        Route::get('/profile', Profile::class)->name('profile');
     });
 
 Route::middleware(['auth', Role::ADMIN->getMiddleware()])

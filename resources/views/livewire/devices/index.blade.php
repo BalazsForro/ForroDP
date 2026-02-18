@@ -83,9 +83,14 @@
                                 </div>
                             </div>
                             <div class="col-md-4 d-grid gap-1" style="grid-template-columns: 1fr 1fr;">
-                                <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
+                                <button class="btn btn-sm btn-outline-primary w-100" title="Live measurements"
                                         wire:click="dispatch('open-measurement',{deviceId:  {{ $device->id }}})">
                                     <i class="bi bi-activity"></i> Measurement
+                                </button>
+
+                                <button class="btn btn-sm btn-outline-secondary w-100" title="Historical charts"
+                                        wire:click="dispatch('open-statistics',{deviceId:  {{ $device->id }}})">
+                                    <i class="bi bi-bar-chart-line"></i> Statistics
                                 </button>
 
                                 @canWrite($device)
@@ -117,5 +122,6 @@
     <livewire:devices.create-modal/>
     <livewire:devices.share-modal/>
     <livewire:measurement.show/>
+    <livewire:measurement.statistics/>
     @include('livewire.devices.show-token-modal')
 </div>

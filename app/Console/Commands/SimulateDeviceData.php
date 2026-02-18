@@ -34,9 +34,8 @@ class SimulateDeviceData extends Command
         $response = Http::withToken($token)
             ->acceptJson()
             ->post(config('services.device.endpoint'), [
-                'test_sensor_2' => rand(0, 100),
+                'test_sensor_2' => rand(0, 10),
                 'test_sensor'   => rand(0, 100),
-                'asd' => rand(0, 100),
             ]);
 
         if ($response->failed()) {

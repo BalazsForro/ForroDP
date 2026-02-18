@@ -43,13 +43,6 @@ class Show extends Component
             ->get();
     }
 
-    /**
-     * Jelenlegi állapot szenzoronként:
-     * - legfrissebb MeasurementValue (value)
-     * - measurement.is_valid + measurement.created_at
-     *
-     * Megoldás: subquery-vel megkeressük szenzoronként a max(id)-t a device mérésein belül.
-     */
     public function getCurrentStateProperty(): \Illuminate\Support\Collection
     {
         if (!$this->deviceId) {
@@ -91,9 +84,6 @@ class Show extends Component
         });
     }
 
-    /**
-     * Opcionális: device utolsó N value sora (összes szenzor vegyesen) a “live feed”-hez.
-     */
     public function getLatestFeedProperty(): Collection
     {
         if (!$this->deviceId) {
