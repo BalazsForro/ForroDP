@@ -15,13 +15,6 @@
                     <li class="nav-item">
                         <a @class(['nav-link', 'active' => request()->routeIs('devices')]) href="{{ route('devices') }}">Devices</a>
                     </li>
-                @else
-                    <li class="nav-item">
-                        <a @class(['nav-link', 'active' => request()->routeIs('login')]) href="{{ route('login') }}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a @class(['nav-link', 'active' => request()->routeIs('register')]) href="{{ route('register') }}">Register</a>
-                    </li>
                 @endauth
             </ul>
 
@@ -60,6 +53,16 @@
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
+
+            @else
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a @class(['nav-link', 'active' => request()->routeIs('login')]) href="{{ route('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a @class(['nav-link', 'active' => request()->routeIs('register')]) href="{{ route('register') }}">Register</a>
+                    </li>
+                </ul>
             @endauth
         </div>
     </div>
