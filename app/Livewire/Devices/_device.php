@@ -15,7 +15,6 @@ class _device extends _sensor
 
     #[Validate('string|required|max:45')]
     public string $deviceName = '';
-
     #[Validate('nullable|string|max:255')]
     public ?string $deviceDescription = null;
 

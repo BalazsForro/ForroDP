@@ -41,7 +41,6 @@ class AppServiceProvider extends ServiceProvider
                 return true;
             }
 
-
             $isOwner = $device->owner->id == auth()->id();
 
             if ($isOwner) {

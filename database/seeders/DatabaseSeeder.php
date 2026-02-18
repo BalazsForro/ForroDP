@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
 
-        for ($i = 0; $i < 10; $i++) {
+        /*for ($i = 0; $i < 10; $i++) {
             $device = Device::factory()->create();
 
             DeviceToken::factory()->for($device)->create();
@@ -34,9 +34,9 @@ class DatabaseSeeder extends Seeder
                 ->count(rand(0, 5))
                 ->for($device)
                 ->create();
-        }
+        }*/
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name'  => 'megosztott',
             'email' => 'megosztott@gmail.com',
             'password' => bcrypt('megosztott'),
@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
 
         $device = Device::factory()->create([
             'name' => 'Test device',
+            'owner_user_id' => $user->id,
         ]);
 
         Sensor::factory()->for($device)->create([

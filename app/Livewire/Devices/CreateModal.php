@@ -96,10 +96,9 @@ class CreateModal extends _device
         $this->dispatch('bs-toast-show', message: "Device was created successfully");
     }
 
-    public function update(?int $deviceId = null)
+    public function update(int $deviceId = null)
     {
         $device = DB::transaction(function () use ($deviceId) {
-
             $device = Device::find($deviceId);
             $device->update([
                 'name'        => $this->deviceName,
@@ -115,7 +114,7 @@ class CreateModal extends _device
         });
 
         // Index: update table
-        $this->dispatch('device-created', deviceId: $device?->id);
+        $this->dispatch('device-created', deviceId: $device->id);
 
         $this->dispatch('bs-toast-show', message: "Device was updated successfully");
     }

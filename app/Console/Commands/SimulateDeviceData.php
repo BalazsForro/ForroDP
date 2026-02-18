@@ -29,26 +29,14 @@ class SimulateDeviceData extends Command
     public function handle(): void
     {
         // php artisan schedule:work
-        $token = config('services.device.token'); // vagy .env-ből
-/*
-        try {
-            $response = Http::withToken($token)
-                ->withHeaders([
-                    'X-Device-Token' => $token,
-                ])
-                ->post(config('services.device.endpoint'), [
-                    'test_sensor_2' => rand(0, 100),
-                    'test_sensor'   => rand(0, 100),
-                ]);
-        }catch (ConnectionException $e){
-            dd($e->getMessage());
-        }*/
+        $token = config('services.device.token');
 
         $response = Http::withToken($token)
             ->acceptJson()
             ->post(config('services.device.endpoint'), [
                 'test_sensor_2' => rand(0, 100),
                 'test_sensor'   => rand(0, 100),
+                'asd' => rand(0, 100),
             ]);
 
         if ($response->failed()) {
