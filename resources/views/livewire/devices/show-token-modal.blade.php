@@ -4,6 +4,7 @@
     tabindex="-1"
     aria-labelledby="tokenModalLabel"
     aria-hidden="true"
+    wire:ignore.self
     data-bs-backdrop="static"
     data-bs-keyboard="false"
 >
