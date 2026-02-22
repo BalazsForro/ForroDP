@@ -34,6 +34,9 @@ class ShareModal extends _share
 
     public function open(int $deviceId): void
     {
+        $this->reset();
+        $this->resetValidation();
+
         $this->deviceId = $deviceId;
 
         $this->fetchShares($deviceId);

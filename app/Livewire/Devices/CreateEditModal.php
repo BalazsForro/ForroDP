@@ -39,7 +39,7 @@ class CreateEditModal extends _device
 
     public function open(?int $deviceId = null): void
     {
-        // reset state
+        $this->reset();
         $this->resetValidation();
 
         $this->resetDevice($deviceId);

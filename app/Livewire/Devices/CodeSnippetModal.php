@@ -20,6 +20,9 @@ class CodeSnippetModal extends Component
 
     public function open(int $deviceId): void
     {
+        $this->reset();
+        $this->resetValidation();
+
         $this->deviceId = $deviceId;
 
         $device = Device::find($deviceId);

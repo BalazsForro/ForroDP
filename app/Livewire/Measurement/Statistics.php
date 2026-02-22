@@ -22,6 +22,9 @@ class Statistics extends Component
 
     public function open(int $deviceId): void
     {
+        $this->reset();
+        $this->resetValidation();
+
         $this->deviceId = $deviceId;
         $this->range = '24h';
         $this->dispatch('bs-modal-open', id: 'statisticsModal');

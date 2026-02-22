@@ -22,6 +22,9 @@ class Show extends Component
 
     public function open(int $deviceId): void
     {
+        $this->reset();
+        $this->resetValidation();
+
         $this->deviceId = $deviceId;
         $this->dispatch('bs-modal-open', id: 'measurementModal');
     }
