@@ -83,7 +83,9 @@
                                 </div>
                             </div>
                             <div class="col-md-5 d-flex flex-row justify-content-between">
-                                <button class="btn btn-outline-info h-100" title="Show code" name="device-code-button">
+                                <button class="btn btn-outline-info h-100" title="Show code" name="device-code-button"
+                                        wire:click="dispatch('open-code-snippet',{deviceId:  {{ $device->id }}})"
+                                >
                                     <i class="bi bi-file-earmark-code"></i>
                                 </button>
                                 <div class="d-grid gap-1" name="device-actions-holder">
@@ -100,7 +102,7 @@
 
                                         @canWrite($device)
                                         <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
-                                                wire:click="dispatch('device-edit',{deviceId:  {{ $device->id }}})">
+                                                wire:click="dispatch('open-device-edit',{deviceId:  {{ $device->id }}})">
                                             <i class="bi bi-pencil"></i> Edit
                                         </button>
                                         @endcanWrite()
@@ -143,6 +145,7 @@
 
     <livewire:devices.create-edit-modal>
     <livewire:devices.share-modal/>
+    <livewire:devices.code-snippet-modal/>
     <livewire:measurement.show/>
     <livewire:measurement.statistics/>
     @include('livewire.devices.show-token-modal')

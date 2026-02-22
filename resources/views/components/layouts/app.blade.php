@@ -10,6 +10,9 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
     @livewireStyles
 </head>
 <body>

@@ -15,5 +15,5 @@ Route::middleware('device.token')->group(function () {
         return response()->json($device);
     });
 
-    Route::post('set/data', [DeviceController::class, 'update']);
+    Route::post('set/data', [DeviceController::class, 'update'])->name('api.device.set.data');
 });

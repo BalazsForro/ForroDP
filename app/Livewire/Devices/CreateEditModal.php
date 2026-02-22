@@ -17,6 +17,7 @@ use Illuminate\Contracts\View\View;
 class CreateEditModal extends _device
 {
     protected $listeners = [
+        'open-device-edit'   => 'open',
         'open-device-create' => 'open',
         'sensors-changed'    => 'onSensorsChanged',
         'sensors-invalid'    => 'onSensorsInvalid',
@@ -36,7 +37,6 @@ class CreateEditModal extends _device
         }
     }
 
-    #[On('device-edit')]
     public function open(?int $deviceId = null): void
     {
         // reset state
@@ -130,7 +130,7 @@ class CreateEditModal extends _device
             'deviceDescription' => 'nullable|string|max:255',
             'deviceType'        => 'integer|required|in:1,2,3,4',
 
-            ...self::SENSORS_VALIDATE
+            ...self::SENSORS_VALIDATE,
         ];
     }
 
