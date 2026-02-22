@@ -44,7 +44,7 @@ class Index extends Component
     public function loadDevices(): void
     {
         $query = Device::query()->with([
-            'sensors',
+            'sensors' => fn($q) => $q->withTrashed(),
             'shares.sharedUser',
             'shares.sharedBy',
         ]);
@@ -65,15 +65,25 @@ class Index extends Component
                 ->orWhereHas('sensors', fn($q) => $q->where('key', 'like', "%{$this->search}%"));
         }
 
-        $this->devices = $query->latest()->get();
+        $this->devices = $query->withTrashed()->orderByRaw('deleted_at IS NOT NULL')->latest()->get();
     }
 
-    public function edit(int $deviceId): void
+    public function deleteDevice(int $deviceId): void
     {
-        $device = Device::find($deviceId);
-        if ($device) {
-            $this->dispatch('device-edit', deviceId: $deviceId);
-        }
+        Device::find($deviceId)->delete();
+
+        $this->loadDevices();
     }
 
+    public function forceDeleteDevice(int $deviceId): void
+    {
+        Device::onlyTrashed()->find($deviceId)->forceDelete();
+        $this->loadDevices();
+    }
+
+    public function revokeDevice(int $deviceId): void
+    {
+        Device::onlyTrashed()->find($deviceId)->restore();
+        $this->loadDevices();
+    }
 }

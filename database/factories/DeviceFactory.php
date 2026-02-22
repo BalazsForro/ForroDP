@@ -23,11 +23,8 @@ class DeviceFactory extends Factory
     {
         return [
             'owner_user_id' => User::factory(),
-
             'name' => $this->faker->words(2, true),
             'description' => $this->faker->optional()->sentence(),
-
-            'is_active' => Device::STATUS_ACTIVE, // vagy faker random ha akarsz
             'type' => $this->faker->numberBetween(1, count(DeviceType::cases())), // igazítsd ha enum lesz
         ];
     }

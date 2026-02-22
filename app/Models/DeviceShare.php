@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DeviceShare extends Model
 {
-    use SoftDeletes;
-
     public const PERMISSION_NONE = 0;
     public const PERMISSION_READ = 1;
     public const PERMISSION_READ_WRITE = 2;

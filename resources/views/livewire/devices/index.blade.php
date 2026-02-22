@@ -45,21 +45,21 @@
                                     <small class="text-muted d-flex justify-content-between">
                                         {{ \App\Enums\DeviceType::from($device->type)->getDisplayName() }}
                                         @isOwner($device)
-                                        <span class="badge bg-success">Owner</span>
+                                            <span class="badge bg-success">Owner</span>
                                         @else
                                             <span class="badge bg-info">Shared</span>
-                                            @endisOwner
+                                        @endisOwner
                                     </small>
                                 </div>
                             </div>
-                            <span class="d-grid gap-2">
-                                @if($device->is_active)
+                            <div class="d-grid align-items-center">
+                                @isActive($device)
                                     <span class="badge bg-success">Active</span>
                                 @else
                                     <span class="badge bg-secondary">Inactive</span>
                                 @endif
                                 <span class="badge border text-dark bg-light">{{ $device->token?->prefix ?? ' ' }}</span>
-                            </span>
+                            </div>
                         </div>
                     </button>
                 </h2>
@@ -67,7 +67,7 @@
                      data-bs-parent="#devicesAccordion">
                     <div class="accordion-body">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <p><strong>Description:</strong> {{ $device->description }}</p>
                                 <div>
                                     <strong>Sensors:</strong>
@@ -82,31 +82,53 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="col-md-4 d-grid gap-1" style="grid-template-columns: 1fr 1fr;">
-                                <button class="btn btn-sm btn-outline-primary w-100" title="Live measurements"
-                                        wire:click="dispatch('open-measurement',{deviceId:  {{ $device->id }}})">
-                                    <i class="bi bi-activity"></i> Measurement
+                            <div class="col-md-5 d-flex flex-row justify-content-between">
+                                <button class="btn btn-outline-info h-100" title="Show code" name="device-code-button">
+                                    <i class="bi bi-file-earmark-code"></i>
                                 </button>
+                                <div class="d-grid gap-1" name="device-actions-holder">
+                                    @isActive($device)
+                                        <button class="btn btn-sm btn-outline-primary w-100" title="Live measurements"
+                                                wire:click="dispatch('open-measurement',{deviceId:  {{ $device->id }}})">
+                                            <i class="bi bi-activity"></i> Measurement
+                                        </button>
 
-                                <button class="btn btn-sm btn-outline-secondary w-100" title="Historical charts"
-                                        wire:click="dispatch('open-statistics',{deviceId:  {{ $device->id }}})">
-                                    <i class="bi bi-bar-chart-line"></i> Statistics
-                                </button>
+                                        <button class="btn btn-sm btn-outline-secondary w-100" title="Historical charts"
+                                                wire:click="dispatch('open-statistics',{deviceId:  {{ $device->id }}})">
+                                            <i class="bi bi-bar-chart-line"></i> Statistics
+                                        </button>
 
-                                @canWrite($device)
-                                <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
-                                        wire:click="edit({{ $device->id }})">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </button>
-                                @endcanWrite()
+                                        @canWrite($device)
+                                        <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
+                                                wire:click="dispatch('device-edit',{deviceId:  {{ $device->id }}})">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </button>
+                                        @endcanWrite()
 
-                                @isOwner($device)
-                                <button class="btn btn-sm btn-outline-info w-100" title="Edit"
-                                        wire:click="dispatch('open-share',{deviceId:  {{ $device->id }}})">
-                                    <i class="bi bi-share"></i> Share device
-                                </button>
-                                @endisOwner()
-
+                                        @isOwner($device)
+                                        <button class="btn btn-sm btn-outline-info w-100" title="Edit"
+                                                wire:click="dispatch('open-share',{deviceId:  {{ $device->id }}})">
+                                            <i class="bi bi-share"></i> Share
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger w-100" title="Archive"
+                                                wire:click="deleteDevice({{ $device->id }})">
+                                            <i class="bi bi-archive"></i> Archive
+                                        </button>
+                                        @endisOwner()
+                                    @else
+                                        @isOwner($device)
+                                            <button class="btn btn-sm btn-outline-success w-100" title="Archive"
+                                                    wire:click="revokeDevice({{ $device->id }})">
+                                                <i class="bi bi-arrow-counterclockwise"></i> Revoke
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger w-100" title="Archive"
+                                                    wire:confirm="'Are you sure you want to delete this device?'"
+                                                    wire:click="forceDeleteDevice({{ $device->id }})">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        @endisOwner()
+                                    @endisActive
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -119,7 +141,7 @@
         @endforelse
     </div>
 
-    <livewire:devices.create-modal/>
+    <livewire:devices.create-edit-modal>
     <livewire:devices.share-modal/>
     <livewire:measurement.show/>
     <livewire:measurement.statistics/>

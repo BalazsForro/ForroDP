@@ -14,16 +14,23 @@ class Device extends Model
 {
     use SoftDeletes, HasFactory;
 
-    public const STATUS_ACTIVE = 1;
-    public const STATUS_INACTIVE = 0;
-
     protected $fillable = [
         'owner_user_id',
         'name',
         'description',
-        'is_active',
         'type',
     ];
+
+    protected static function booted()
+    {
+        static::deleting(function (Device $device) {
+            $device->sensors()->each(fn (Sensor $sensor) => $sensor->delete());
+        });
+
+        static::restoring(function (Device $device) {
+            $device->sensors()->withTrashed()->each(fn ($sensor) => $sensor->restore());
+        });
+    }
 
     /**
      * @return BelongsTo

@@ -117,16 +117,13 @@ class ShareModal extends _share
                         return;
                     }
 
-                    // owner tiltás (ha nálad így van)
                     $ownerId = Device::whereKey($this->deviceId)->value('owner_user_id');
                     if ($ownerId && (int)$ownerId === (int)$userId) {
                         $fail('You cannot share the device with the owner.');
                     }
 
-                    // duplikáció tiltás
                     $already = DeviceShare::where('device_id', $this->deviceId)
                         ->where('shared_with_user_id', $userId)
-                        ->whereNull('deleted_at')
                         ->exists();
 
                     if ($already) {
@@ -136,5 +133,24 @@ class ShareModal extends _share
             ],
             'newSharePermission' => ['required', 'integer', 'in:1,2'],
         ];
+    }
+
+    public function removeShare(int $shareId)
+    {
+        Device::find($this->deviceId)->shares()->where('id', $shareId)->delete();
+        $this->fetchShares($this->deviceId);
+    }
+
+    public function updateShare(int $shareId, int $index)
+    {
+        $share = DeviceShare::find($shareId);
+        if (!$share) {
+            return;
+        }
+
+        $share->permission = $this->shares[$index]['permission'];
+        $share->save();
+
+        $this->dispatch('bs-toast-show', message: 'Share updated successfully.');
     }
 }

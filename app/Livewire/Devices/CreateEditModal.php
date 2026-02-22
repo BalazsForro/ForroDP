@@ -14,7 +14,7 @@ use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
-class CreateModal extends _device
+class CreateEditModal extends _device
 {
     protected $listeners = [
         'open-device-create' => 'open',
@@ -24,7 +24,7 @@ class CreateModal extends _device
 
     public function render(): Factory|View
     {
-        return view('livewire.devices.create-modal');
+        return view('livewire.devices.create-edit-modal');
     }
 
     public function updated($propertyName, $value): void

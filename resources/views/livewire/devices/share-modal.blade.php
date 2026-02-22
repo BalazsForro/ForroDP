@@ -75,7 +75,7 @@
                                 <div class="col-12 col-md-2 d-grid">
                                     <button
                                         type="button"
-                                        class="btn btn-primary"
+                                        class="btn btn-success"
                                         wire:click="addUser"
                                         wire:loading.attr="disabled"
                                         wire:target="addUser"
@@ -127,6 +127,7 @@
                                             <select
                                                 class="form-select form-select-sm"
                                                 wire:model="shares.{{ $i }}.permission"
+                                                wire:change="updateShare({{ $share['id'] }}, {{ $i }})"
                                             >
                                                 <option value="{{ \App\Models\DeviceShare::PERMISSION_NONE }}">None
                                                 </option>
@@ -167,12 +168,12 @@
                                                 wire:loading.attr="disabled"
                                                 wire:target="removeShare({{ $share['id'] }})"
                                             >
-                                <span wire:loading.remove wire:target="removeShare({{ $share['id'] }})">
-                                    Remove
-                                </span>
+                                                <span wire:loading.remove wire:target="removeShare({{ $share['id'] }})">
+                                                    Remove
+                                                </span>
                                                 <span wire:loading wire:target="removeShare({{ $share['id'] }})">
-                                    ...
-                                </span>
+                                                    ...
+                                                </span>
                                             </button>
                                         </td>
                                     </tr>
@@ -187,16 +188,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Cancel
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-success"
-                        wire:click="saveShares"
-                        wire:loading.attr="disabled"
-                        wire:target="saveShares"
-                    >
-                        <span wire:loading.remove wire:target="saveShares">Save changes</span>
-                        <span wire:loading wire:target="saveShares">Saving...</span>
                     </button>
                 </div>
 

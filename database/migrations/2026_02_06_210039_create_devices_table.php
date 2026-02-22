@@ -21,7 +21,6 @@ return new class extends Migration
 
             $table->string('name', 45);
             $table->string('description', 255)->nullable();
-            $table->unsignedTinyInteger('is_active')->default(Device::STATUS_ACTIVE);
             $table->integer('type');
 
             $table->softDeletes();

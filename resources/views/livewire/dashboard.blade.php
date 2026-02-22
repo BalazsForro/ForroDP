@@ -117,11 +117,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if($device->is_active)
+                                @isActive($device)
                                     <span class="badge text-bg-success">Active</span>
                                 @else
                                     <span class="badge text-bg-secondary">Inactive</span>
-                                @endif
+                                @endisActive
                             </div>
 
                             {{-- Sensor value pills --}}

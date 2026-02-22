@@ -79,5 +79,9 @@ class AppServiceProvider extends ServiceProvider
 
             return $shareSettings->canWrite();
         });
+
+        Blade::if('isActive', function ($device): bool {
+            return !$device->trashed();
+        });
     }
 }

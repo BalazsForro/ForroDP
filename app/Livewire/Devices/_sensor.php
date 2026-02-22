@@ -5,6 +5,7 @@ namespace App\Livewire\Devices;
 use App\Enums\DataType;
 use App\Enums\DeviceType;
 use App\Models\Device;
+use App\Models\Sensor;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -29,6 +30,7 @@ class _sensor extends Component
     public function addSensor(): void
     {
         $this->sensors[] = [
+            'id' => null,
             'name'               => '',
             'key'                => '',
             'description'        => '',
@@ -46,13 +48,22 @@ class _sensor extends Component
 
     public function removeSensor(int $index): void
     {
+        $sensor = $this->sensors[$index];
+
+        if ($sensor['id']) {
+            Sensor::find($sensor['id'])->delete();
+        }
+
         unset($this->sensors[$index]);
     }
 
     protected function fetchSensors(Device $device): void
     {
+        $this->clearSensors();
+
         foreach ($device->sensors()->orderBy('display_sort_order')->get() as $sensor) {
             $this->sensors[] = [
+                'id'                 => $sensor->id,
                 'name'               => $sensor->name,
                 'key'                => $sensor->key,
                 'description'        => $sensor->description,

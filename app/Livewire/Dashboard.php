@@ -19,23 +19,24 @@ class Dashboard extends Component
         return Device::query()
             ->where(function ($q) {
                 $q->where('owner_user_id', auth()->id())
-                  ->orWhereHas('sharedUsers', fn ($s) => $s->where('users.id', auth()->id()));
+                    ->orWhereHas('sharedUsers', fn($s) => $s->where('users.id', auth()->id()));
             })
             ->with(['sensors', 'latestState.measurement:id,created_at'])
-            ->orderByDesc('is_active')
+            ->orderByDesc('created_at')
             ->orderBy('name')
+            ->withTrashed()
             ->get();
     }
 
     public function getStatsProperty(): array
     {
-        $devices   = $this->devices;
+        $devices = $this->devices;
         $deviceIds = $devices->pluck('id');
 
         return [
             'total_devices'      => $devices->count(),
-            'active_devices'     => $devices->where('is_active', 1)->count(),
-            'total_sensors'      => $devices->sum(fn ($d) => $d->sensors->count()),
+            'active_devices'     => $devices->where('deleted_at', null)->count(),
+            'total_sensors'      => $devices->sum(fn($d) => $d->sensors->count()),
             'today_measurements' => $deviceIds->isNotEmpty()
                 ? Measurement::whereIn('device_id', $deviceIds)->whereDate('created_at', today())->count()
                 : 0,

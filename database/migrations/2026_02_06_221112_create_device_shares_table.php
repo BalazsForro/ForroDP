@@ -29,8 +29,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('permission')->default(0);
             $table->timestamp('accepted_at')->nullable();
 
-            $table->softDeletes();
-
             $table->timestamps();
 
             $table->unique(['device_id', 'shared_with_user_id']);

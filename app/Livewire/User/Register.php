@@ -2,7 +2,10 @@
 
 namespace App\Livewire\User;
 
+use App\Enums\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -30,7 +33,7 @@ class Register extends Component
             'password' => Hash::make($this->password),
         ]);
 
-        $this->user->assignRole(Role::USER);
+        $this->user->assignRole(Role::USER->value);
 
         Auth::login($this->user);
 
