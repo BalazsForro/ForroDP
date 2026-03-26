@@ -15,6 +15,31 @@
                     <li class="nav-item">
                         <a @class(['nav-link', 'active' => request()->routeIs('devices')]) href="{{ route('devices') }}">Devices</a>
                     </li>
+                    @isAdmin()
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-1 @if(request()->routeIs('admin.*')) active @endif"
+                               href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                               style="color: #92400e;"
+                            >
+                                <i class="bi bi-shield-lock-fill" style="font-size: 0.8rem;"></i>
+                                Admin
+                            </a>
+                            <ul class="dropdown-menu" style="min-width: 200px;">
+                                <li>
+                                    <span class="dropdown-item-text small text-muted d-flex align-items-center gap-1" style="font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600;">
+                                        <i class="bi bi-shield-lock"></i> Admin Panel
+                                    </span>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
+                                    <a class="dropdown-item @if(request()->routeIs('admin.device-types')) active @endif"
+                                       href="{{ route('admin.device-types') }}">
+                                        <i class="bi bi-cpu me-2 text-muted"></i>Device Types
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endisAdmin
                 @endauth
             </ul>
 

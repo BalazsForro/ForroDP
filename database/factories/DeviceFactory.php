@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Enums\DeviceType;
 use App\Models\Device;
+use App\Models\DeviceType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,7 +25,7 @@ class DeviceFactory extends Factory
             'owner_user_id' => User::factory(),
             'name' => $this->faker->words(2, true),
             'description' => $this->faker->optional()->sentence(),
-            'type' => $this->faker->numberBetween(1, count(DeviceType::cases())), // igazítsd ha enum lesz
+            'device_type_id' => DeviceType::inRandomOrder()->first()?->id ?? 1,
         ];
     }
 }

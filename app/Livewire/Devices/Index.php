@@ -44,6 +44,7 @@ class Index extends Component
     public function loadDevices(): void
     {
         $query = Device::query()->with([
+            'deviceType',
             'sensors' => fn($q) => $q->withTrashed(),
             'shares.sharedUser',
             'shares.sharedBy',

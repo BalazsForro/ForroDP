@@ -3,7 +3,6 @@
 namespace App\Livewire\Devices;
 
 
-use App\Enums\DeviceType;
 use App\Models\Device;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -18,8 +17,8 @@ class _device extends _sensor
     #[Validate('nullable|string|max:255')]
     public ?string $deviceDescription = null;
 
-    #[Validate('integer|required|in:1,2,3,4')]
-    public int $deviceType = DeviceType::ARDUINO->value;
+    #[Validate('integer|required|exists:device_types,id')]
+    public int $deviceType = 1;
 
     protected function resetDevice(?int $deviceId = null): void
     {
@@ -33,14 +32,14 @@ class _device extends _sensor
         if ($this->device) {
             $this->deviceName = $this->device->name;
             $this->deviceDescription = $this->device->description;
-            $this->deviceType = $this->device->type;
+            $this->deviceType = $this->device->device_type_id;
 
             $this->fetchSensors($this->device);
         }
         else {
             $this->deviceName = '';
             $this->deviceDescription = null;
-            $this->deviceType = DeviceType::ARDUINO->value;
+            $this->deviceType = 1;
 
             $this->clearSensors();
         }

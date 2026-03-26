@@ -18,7 +18,7 @@ class Device extends Model
         'owner_user_id',
         'name',
         'description',
-        'type',
+        'device_type_id',
     ];
 
     protected static function booted()
@@ -30,6 +30,11 @@ class Device extends Model
         static::restoring(function (Device $device) {
             $device->sensors()->withTrashed()->each(fn ($sensor) => $sensor->restore());
         });
+    }
+
+    public function deviceType(): BelongsTo
+    {
+        return $this->belongsTo(DeviceType::class);
     }
 
     /**

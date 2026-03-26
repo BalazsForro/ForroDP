@@ -21,7 +21,7 @@ class Dashboard extends Component
                 $q->where('owner_user_id', auth()->id())
                     ->orWhereHas('sharedUsers', fn($s) => $s->where('users.id', auth()->id()));
             })
-            ->with(['sensors', 'latestState.measurement:id,created_at'])
+            ->with(['deviceType', 'sensors', 'latestState.measurement:id,created_at'])
             ->orderByDesc('created_at')
             ->orderBy('name')
             ->withTrashed()

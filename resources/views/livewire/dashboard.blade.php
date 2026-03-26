@@ -91,13 +91,7 @@
                     $latestMeasurementId = $device->latestState?->measurement_id;
                     $sensorValues        = $this->currentStates->get($latestMeasurementId, collect());
                     $measuredAt          = $device->latestState?->measurement?->created_at;
-                    $typeIcons = [
-                        1 => 'bi-cpu',
-                        2 => 'bi-broadcast',
-                        3 => 'bi-server',
-                        4 => 'bi-gear',
-                    ];
-                    $typeIcon = $typeIcons[$device->type] ?? 'bi-gear';
+                    $typeIcon = $device->deviceType?->icon ?? 'bi-gear';
                 @endphp
 
                 <div class="col-sm-6 col-xl-4">
@@ -113,7 +107,7 @@
                                     <div>
                                         <div class="fw-semibold lh-sm">{{ $device->name }}</div>
                                         <div class="text-muted small">
-                                            {{ \App\Enums\DeviceType::from($device->type)->getDisplayName() }}
+                                            {{ $device->deviceType?->name }}
                                         </div>
                                     </div>
                                 </div>

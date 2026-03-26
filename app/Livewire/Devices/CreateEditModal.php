@@ -3,7 +3,6 @@
 namespace App\Livewire\Devices;
 
 use App\Enums\DataType;
-use App\Enums\DeviceType;
 use App\Models\Device;
 use App\Models\DeviceToken;
 use Illuminate\Support\Facades\Auth;
@@ -69,7 +68,7 @@ class CreateEditModal extends _device
                 'owner_user_id' => $userId,
                 'name'          => $this->deviceName,
                 'description'   => $this->deviceDescription ?: null,
-                'type'          => $this->deviceType,
+                'device_type_id' => $this->deviceType,
             ]);
 
             $device->token()->create([
@@ -101,9 +100,9 @@ class CreateEditModal extends _device
         $device = DB::transaction(function () use ($deviceId) {
             $device = Device::find($deviceId);
             $device->update([
-                'name'        => $this->deviceName,
-                'description' => $this->deviceDescription ?: null,
-                'type'        => $this->deviceType,
+                'name'           => $this->deviceName,
+                'description'    => $this->deviceDescription ?: null,
+                'device_type_id' => $this->deviceType,
             ]);
 
             foreach ($this->sensors as $sensorData) {
@@ -128,7 +127,7 @@ class CreateEditModal extends _device
         return [
             'deviceName'        => 'string|required|max:45',
             'deviceDescription' => 'nullable|string|max:255',
-            'deviceType'        => 'integer|required|in:1,2,3,4',
+            'deviceType'        => 'integer|required|exists:device_types,id',
 
             ...self::SENSORS_VALIDATE,
         ];

@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="row p-2 col-3">
                                     <small class="text-muted d-flex justify-content-between">
-                                        {{ \App\Enums\DeviceType::from($device->type)->getDisplayName() }}
+                                        {{ $device->deviceType?->name }}
                                         @isOwner($device)
                                             <span class="badge bg-success">Owner</span>
                                         @else

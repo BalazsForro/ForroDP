@@ -3,7 +3,6 @@
 namespace App\Livewire\Devices;
 
 use App\Enums\DataType;
-use App\Enums\DeviceType;
 use App\Models\Device;
 use App\Models\Sensor;
 use Livewire\Attributes\On;

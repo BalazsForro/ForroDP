@@ -32,9 +32,9 @@
                     <div class="mb-3">
                         <label class="form-label">Device type</label>
                         <select class="form-select" wire:model="deviceType">
-                            @foreach (\App\Enums\DeviceType::cases() as $deviceType)
-                                <option value="{{ $deviceType->value }}" @selected($deviceType->value == $this->deviceType)>
-                                    {{ $deviceType->getDisplayName() }}
+                            @foreach (\App\Models\DeviceType::all() as $deviceType)
+                                <option value="{{ $deviceType->id }}" @selected($deviceType->id == $this->deviceType)>
+                                    {{ $deviceType->name }}
                                 </option>
                             @endforeach
                         </select>
