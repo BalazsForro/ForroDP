@@ -37,6 +37,12 @@
                                         <i class="bi bi-cpu me-2 text-muted"></i>Device Types
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-item @if(request()->routeIs('admin.code-snippets')) active @endif"
+                                       href="{{ route('admin.code-snippets') }}">
+                                        <i class="bi bi-code-slash me-2 text-muted"></i>Code Snippets
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endisAdmin

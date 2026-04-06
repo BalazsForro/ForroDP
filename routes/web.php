@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Role;
+use App\Livewire\Admin\CodeSnippets\Index as AdminCodeSnippetsIndex;
 use App\Livewire\Admin\DeviceTypes\Index as AdminDeviceTypesIndex;
 use App\Livewire\Dashboard;
 use App\Livewire\Devices\Index as DevicesIndex;
@@ -34,4 +35,5 @@ Route::middleware(['auth', Role::ADMIN->getMiddleware()])
     ->name('admin.')
     ->group(function () {
         Route::get('/device-types', AdminDeviceTypesIndex::class)->name('device-types');
+        Route::get('/code-snippets', AdminCodeSnippetsIndex::class)->name('code-snippets');
     });

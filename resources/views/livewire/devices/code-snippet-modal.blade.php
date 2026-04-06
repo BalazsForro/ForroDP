@@ -18,99 +18,39 @@
 
                 <div class="modal-body">
 
-                    {{-- Description --}}
-                    <div class="alert alert-info mb-4">
-                        <h6 class="alert-heading mb-1">What is this?</h6>
-                        <p class="mb-1">
-                            This is a ready-to-use <strong>Arduino / ESP32 sketch</strong> that sends your sensor data
-                            to this platform over Wi-Fi using an HTTP POST request.
-                        </p>
-                        <hr class="my-2">
-                        <small>
-                            <strong>How to use:</strong>
-                            Copy the full sketch below, paste it into the Arduino IDE, fill in your Wi-Fi credentials
-                            and bearer token, update the sensor variable values in <code>loop()</code>, then upload to
-                            your device.
-                        </small>
-                    </div>
-
-                    {{-- Section 1: Imports --}}
-                    <div class="mb-4">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <div>
-                                <h6 class="mb-0">1. Required Libraries</h6>
-                                <small class="text-muted">Add these at the very top of your sketch (before anything else).</small>
-                            </div>
-                            <button class="btn btn-sm btn-outline-secondary"
-                                    onclick="copyCode('snippet-imports')">
-                                Copy
-                            </button>
+                    @if($snippetContent)
+                        <div class="alert alert-info mb-4">
+                            <h6 class="alert-heading mb-1">What is this?</h6>
+                            <p class="mb-1">
+                                This is a ready-to-use code snippet that sends your sensor data
+                                to this platform using an HTTP POST request.
+                            </p>
+                            <hr class="my-2">
+                            <small>
+                                <strong>How to use:</strong>
+                                Copy the snippet below, fill in your credentials and bearer token,
+                                update the sensor variable values, then run it on your device.
+                            </small>
                         </div>
-                        <pre id="snippet-imports" class="rounded mb-0" style="font-size: 0.85rem;"><code class="language-cpp">#include &lt;WiFi.h&gt;
-#include &lt;HTTPClient.h&gt;</code></pre>
-                    </div>
 
-                    {{-- Section 2: Full Sketch --}}
-                    <div class="mb-2">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <div>
-                                <h6 class="mb-0">2. Full Sketch</h6>
-                                <small class="text-muted">Paste this into a new Arduino sketch. Replace the placeholders marked with <code>YOUR_</code>.</small>
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <div>
+                                    <h6 class="mb-0">Code Snippet</h6>
+                                    <small class="text-muted">Replace the placeholders marked with <code>YOUR_</code>.</small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        onclick="copyCode('snippet-full')">
+                                    Copy
+                                </button>
                             </div>
-                            <button class="btn btn-sm btn-outline-secondary"
-                                    onclick="copyCode('snippet-full')">
-                                Copy
-                            </button>
+                            <pre id="snippet-full" class="rounded mb-0" style="font-size: 0.85rem;"><code>{{ $snippetContent }}</code></pre>
                         </div>
-                        <pre id="snippet-full" class="rounded mb-0" style="font-size: 0.85rem;"><code class="language-cpp">const char* ssid        = "YOUR_WIFI_SSID";
-const char* password    = "YOUR_WIFI_PASSWORD";
-const char* serverURL   = "{{ route('api.device.set.data') }}";
-const char* bearerToken = "YOUR_BEARER_TOKEN";
-
-// === SENSOR VARIABLES — update these with your actual readings ===
-{{ $variablesString }}
-// ================================================================
-
-void setup() {
-  Serial.begin(115200);
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
-  }
-  Serial.println("Connected!");
-}
-
-void loop() {
-  if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-
-    http.begin(serverURL);
-    http.addHeader("Content-Type", "application/json");
-    http.addHeader("Authorization", String("Bearer ") + bearerToken);
-
-    // Build JSON body — set your variable values above before sending
-    {{ $jsonBodyString }}
-
-    Serial.println("Sending: " + jsonBody);
-
-    int httpResponseCode = http.POST(jsonBody);
-
-    if (httpResponseCode > 0) {
-      String response = http.getString();
-      Serial.println("Response code: " + String(httpResponseCode));
-      Serial.println("Response: " + response);
-    } else {
-      Serial.println("Error: " + String(httpResponseCode));
-    }
-
-    http.end();
-  }
-
-  delay(10000); // Send data every 10 seconds
-}</code></pre>
-                    </div>
+                    @else
+                        <div class="alert alert-warning mb-0">
+                            No code snippet available for this device type.
+                        </div>
+                    @endif
 
                 </div>
 

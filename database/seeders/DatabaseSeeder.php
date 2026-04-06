@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             UserSeeder::class,
+            CodeSnippetSeeder::class,
         ]);
 
         /*for ($i = 0; $i < 10; $i++) {
