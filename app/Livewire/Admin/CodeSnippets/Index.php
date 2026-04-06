@@ -28,6 +28,6 @@ class Index extends Component
 
     public function loadSnippets(): void
     {
-        $this->snippets = CodeSnippet::with('deviceType')->orderBy('device_type_id')->get();
+        $this->snippets = CodeSnippet::with('deviceType')->orderBy('id')->get();
     }
 }

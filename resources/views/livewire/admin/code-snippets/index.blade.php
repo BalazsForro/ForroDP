@@ -3,6 +3,14 @@
         <div class="col-2 d-flex align-items-center">
             <h4 class="m-0 p-0">Code Snippets</h4>
         </div>
+        <div class="col-1 offset-9 d-flex justify-content-end">
+            <button
+                class="btn btn-success"
+                wire:click="$dispatch('open-code-snippet-create')"
+            >
+                Create
+            </button>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -11,6 +19,7 @@
                 <thead class="table-light">
                     <tr>
                         <th style="width: 60px;">#</th>
+                        <th style="width: 200px;">Name</th>
                         <th style="width: 160px;">Device Type</th>
                         <th>Snippet Preview</th>
                         <th style="width: 100px;">Actions</th>
@@ -20,6 +29,7 @@
                     @forelse ($snippets as $snippet)
                         <tr>
                             <td class="text-muted">{{ $snippet->id }}</td>
+                            <td class="fw-semibold">{{ $snippet->name }}</td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     @if ($snippet->deviceType?->icon)
@@ -42,7 +52,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-4">No code snippets found.</td>
+                            <td colspan="5" class="text-center text-muted py-4">No code snippets found.</td>
                         </tr>
                     @endforelse
                 </tbody>

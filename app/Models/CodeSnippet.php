@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CodeSnippet extends Model
 {
-    protected $fillable = ['device_type_id', 'content'];
+    protected $fillable = ['name', 'content'];
 
-    public function deviceType(): BelongsTo
+    public function deviceType(): HasOne
     {
-        return $this->belongsTo(DeviceType::class);
+        return $this->hasOne(DeviceType::class);
     }
 }

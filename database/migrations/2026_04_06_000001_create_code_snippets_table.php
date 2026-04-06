@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('code_snippets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_type_id')->constrained('device_types')->cascadeOnDelete();
+            $table->string('name', 100);
             $table->text('content');
             $table->timestamps();
         });

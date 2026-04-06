@@ -35,6 +35,19 @@
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Code Snippet</label>
+                        <select class="form-select" wire:model="codeSnippetId">
+                            <option value="">— None —</option>
+                            @foreach ($codeSnippets as $snippet)
+                                <option value="{{ $snippet->id }}">{{ $snippet->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('codeSnippetId')
+                            <div class="text-danger small">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="modal-footer">

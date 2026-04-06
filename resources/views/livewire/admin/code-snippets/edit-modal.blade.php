@@ -8,7 +8,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        Edit Code Snippet
+                        {{ $snippet ? 'Edit Code Snippet' : 'Create Code Snippet' }}
                         @if($snippet?->deviceType)
                             &mdash; <span class="text-muted fw-normal">{{ $snippet->deviceType->name }}</span>
                         @endif
@@ -39,6 +39,20 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label fw-semibold">Name</label>
+                        <input
+                            type="text"
+                            class="form-control @error('name') is-invalid @enderror"
+                            wire:model="name"
+                            maxlength="100"
+                            placeholder="e.g. Arduino — WiFi HTTP POST"
+                        >
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label fw-semibold">Snippet Content</label>
                         <textarea
                             class="form-control @error('content') is-invalid @enderror"
@@ -63,7 +77,7 @@
                         wire:click="save"
                         wire:loading.attr="disabled"
                     >
-                        <span wire:loading.remove>Save</span>
+                        <span wire:loading.remove>{{ $snippet ? 'Save' : 'Create' }}</span>
                         <span wire:loading>Saving...</span>
                     </button>
                 </div>

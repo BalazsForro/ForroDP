@@ -3,16 +3,18 @@
 namespace Database\Seeders;
 
 use App\Models\CodeSnippet;
+use App\Models\DeviceType;
 use Illuminate\Database\Seeder;
 
 class CodeSnippetSeeder extends Seeder
 {
     public function run(): void
     {
-        // Arduino (device_type_id = 1)
-        CodeSnippet::updateOrCreate(
-            ['device_type_id' => 1],
-            ['content' => <<<'CODE'
+        $snippets = [
+            // Arduino (device_type_id = 1)
+            1 => [
+                'name'    => 'Arduino — WiFi HTTP POST',
+                'content' => <<<'CODE'
 #include <WiFi.h>
 #include <HTTPClient.h>
 
@@ -63,13 +65,13 @@ void loop() {
 
   delay(10000); // Send data every 10 seconds
 }
-CODE]
-        );
+CODE,
+            ],
 
-        // ESP32 (device_type_id = 2)
-        CodeSnippet::updateOrCreate(
-            ['device_type_id' => 2],
-            ['content' => <<<'CODE'
+            // ESP32 (device_type_id = 2)
+            2 => [
+                'name'    => 'ESP32 — WiFi HTTP POST',
+                'content' => <<<'CODE'
 #include <WiFi.h>
 #include <HTTPClient.h>
 
@@ -123,13 +125,13 @@ void loop() {
 
   delay(10000); // Send data every 10 seconds
 }
-CODE]
-        );
+CODE,
+            ],
 
-        // Raspberry Pi (device_type_id = 3)
-        CodeSnippet::updateOrCreate(
-            ['device_type_id' => 3],
-            ['content' => <<<'CODE'
+            // Raspberry Pi (device_type_id = 3)
+            3 => [
+                'name'    => 'Raspberry Pi — Python HTTP POST',
+                'content' => <<<'CODE'
 import requests
 import time
 
@@ -158,13 +160,13 @@ if __name__ == "__main__":
         print(f"Sending: {payload}")
         send_data(payload)
         time.sleep(10)  # Send data every 10 seconds
-CODE]
-        );
+CODE,
+            ],
 
-        // Other (device_type_id = 4)
-        CodeSnippet::updateOrCreate(
-            ['device_type_id' => 4],
-            ['content' => <<<'CODE'
+            // Other (device_type_id = 4)
+            4 => [
+                'name'    => 'Generic — curl HTTP POST',
+                'content' => <<<'CODE'
 # Send sensor data using curl
 # Replace YOUR_BEARER_TOKEN with your actual token
 
@@ -175,7 +177,27 @@ curl -X POST "{{SERVER_URL}}" \
 
 # Example response:
 # {"message": "Data received successfully"}
-CODE]
-        );
+CODE,
+            ],
+        ];
+
+        foreach ($snippets as $deviceTypeId => $data) {
+            $deviceType = DeviceType::find($deviceTypeId);
+
+            if (!$deviceType) {
+                continue;
+            }
+
+            if ($deviceType->code_snippet_id) {
+                $snippet = CodeSnippet::find($deviceType->code_snippet_id);
+                if ($snippet) {
+                    $snippet->update($data);
+                    continue;
+                }
+            }
+
+            $snippet = CodeSnippet::create($data);
+            $deviceType->update(['code_snippet_id' => $snippet->id]);
+        }
     }
 }

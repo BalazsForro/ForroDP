@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\DeviceTypes;
 
+use App\Models\CodeSnippet;
 use App\Models\DeviceType;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,6 +14,7 @@ class CreateEditModal extends Component
 
     public string $name = '';
     public string $icon = '';
+    public ?int $codeSnippetId = null;
 
     protected $listeners = [
         'open-device-type-create' => 'open',
@@ -21,7 +23,9 @@ class CreateEditModal extends Component
 
     public function render(): Factory|View
     {
-        return view('livewire.admin.device-types.create-edit-modal');
+        return view('livewire.admin.device-types.create-edit-modal', [
+            'codeSnippets' => CodeSnippet::orderBy('id')->get(),
+        ]);
     }
 
     public function open(?int $deviceTypeId = null): void
@@ -30,9 +34,10 @@ class CreateEditModal extends Component
         $this->resetValidation();
 
         if ($deviceTypeId) {
-            $this->deviceType = DeviceType::findOrFail($deviceTypeId);
-            $this->name       = $this->deviceType->name;
-            $this->icon       = $this->deviceType->icon ?? '';
+            $this->deviceType    = DeviceType::findOrFail($deviceTypeId);
+            $this->name          = $this->deviceType->name;
+            $this->icon          = $this->deviceType->icon ?? '';
+            $this->codeSnippetId = $this->deviceType->code_snippet_id;
         }
 
         $this->dispatch('bs-modal-open', id: 'deviceTypeModal');
@@ -41,13 +46,15 @@ class CreateEditModal extends Component
     public function save(): void
     {
         $this->validate([
-            'name' => 'required|string|max:45|unique:device_types,name',
-            'icon' => 'nullable|string|max:50',
+            'name'          => 'required|string|max:45|unique:device_types,name',
+            'icon'          => 'nullable|string|max:50',
+            'codeSnippetId' => 'nullable|integer|exists:code_snippets,id',
         ]);
 
         DeviceType::create([
-            'name' => $this->name,
-            'icon' => $this->icon ?: null,
+            'name'            => $this->name,
+            'icon'            => $this->icon ?: null,
+            'code_snippet_id' => $this->codeSnippetId,
         ]);
 
         $this->dispatch('bs-modal-close', id: 'deviceTypeModal');
@@ -58,13 +65,15 @@ class CreateEditModal extends Component
     public function update(): void
     {
         $this->validate([
-            'name' => 'required|string|max:45|unique:device_types,name,' . $this->deviceType->id,
-            'icon' => 'nullable|string|max:50',
+            'name'          => 'required|string|max:45|unique:device_types,name,' . $this->deviceType->id,
+            'icon'          => 'nullable|string|max:50',
+            'codeSnippetId' => 'nullable|integer|exists:code_snippets,id',
         ]);
 
         $this->deviceType->update([
-            'name' => $this->name,
-            'icon' => $this->icon ?: null,
+            'name'            => $this->name,
+            'icon'            => $this->icon ?: null,
+            'code_snippet_id' => $this->codeSnippetId,
         ]);
 
         $this->dispatch('bs-modal-close', id: 'deviceTypeModal');
