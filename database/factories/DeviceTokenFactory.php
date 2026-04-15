@@ -24,7 +24,7 @@ class DeviceTokenFactory extends Factory
             'device_id'    => Device::factory(),
             'prefix'       => DeviceToken::createPrefix($plainToken),
             'token_hash'   => DeviceToken::hashToken($plainToken),
-            'rate_limit'   => fake()->numberBetween(10, 120),
+            'rate_limit'   => 60,
             'last_used_at' => fake()->optional(0.7)->dateTimeBetween('-30 days'),
         ];
     }
