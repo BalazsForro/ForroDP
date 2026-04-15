@@ -41,12 +41,19 @@
                             <td>
                                 <code class="text-muted small">{{ Str::limit($snippet->content, 80) }}</code>
                             </td>
-                            <td>
+                            <td class="d-flex gap-1">
                                 <button
                                     class="btn btn-sm btn-outline-primary"
                                     wire:click="$dispatch('open-code-snippet-edit', { snippetId: {{ $snippet->id }} })"
                                 >
                                     <i class="bi bi-pencil"></i> Edit
+                                </button>
+                                <button
+                                    class="btn btn-sm btn-outline-danger"
+                                    wire:click="deleteSnippet({{ $snippet->id }})"
+                                    wire:confirm="'Are you sure you want to delete this snippet?'"
+                                >
+                                    <i class="bi bi-trash"></i> Delete
                                 </button>
                             </td>
                         </tr>

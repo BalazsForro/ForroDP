@@ -30,4 +30,10 @@ class Index extends Component
     {
         $this->snippets = CodeSnippet::with('deviceType')->orderBy('id')->get();
     }
+
+    public function deleteSnippet(int $snippetId): void
+    {
+        CodeSnippet::findOrFail($snippetId)->delete();
+        $this->loadSnippets();
+    }
 }
