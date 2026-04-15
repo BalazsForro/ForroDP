@@ -51,19 +51,22 @@ class Index extends Component
         ]);
 
         if (!$this->currentUser->hasRole(ROLE::ADMIN->value)) {
-            $query->where('owner_user_id', $this->currentUser->id);
-
-            $query->orWhereHas('sharedUsers', function ($q) {
-                $q->where('users.id', $this->currentUser->id);
+            $query->where(function ($q) {
+                $q->where('owner_user_id', $this->currentUser->id)
+                    ->orWhereHas('sharedUsers', function ($q) {
+                        $q->where('users.id', $this->currentUser->id);
+                    });
             });
         }
 
         if ($this->search) {
-            $query->where('name', 'like', "%{$this->search}%")
-                ->orWhere('description', 'like', "%{$this->search}%")
-                ->orWhereHas('sensors', fn($q) => $q->where('name', 'like', "%{$this->search}%"))
-                ->orWhereHas('sensors', fn($q) => $q->where('description', 'like', "%{$this->search}%"))
-                ->orWhereHas('sensors', fn($q) => $q->where('key', 'like', "%{$this->search}%"));
+            $query->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('description', 'like', "%{$this->search}%")
+                    ->orWhereHas('sensors', fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+                    ->orWhereHas('sensors', fn($q) => $q->where('description', 'like', "%{$this->search}%"))
+                    ->orWhereHas('sensors', fn($q) => $q->where('key', 'like', "%{$this->search}%"));
+            });
         }
 
         $this->devices = $query->withTrashed()->orderByRaw('deleted_at IS NOT NULL')->latest()->get();
