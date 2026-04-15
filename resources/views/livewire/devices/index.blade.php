@@ -82,52 +82,70 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="col-md-5 d-flex flex-row justify-content-between">
-                                <button class="btn btn-outline-info h-100" title="Show code" name="device-code-button"
-                                        wire:click="dispatch('open-code-snippet',{deviceId:  {{ $device->id }}})"
-                                >
-                                    <i class="bi bi-file-earmark-code"></i>
-                                </button>
-                                <div class="d-grid gap-1" name="device-actions-holder">
-                                    @isActive($device)
-                                        <button class="btn btn-sm btn-outline-primary w-100" title="Live measurements"
-                                                wire:click="dispatch('open-measurement',{deviceId:  {{ $device->id }}})">
-                                            <i class="bi bi-activity"></i> Measurement
+                            <div class="col-md-5">
+                                <div class="row g-1" name="device-actions-holder">
+                                    <div class="col-12">
+                                        <button class="btn btn-sm btn-outline-info w-100" title="Show code" name="device-code-button"
+                                                wire:click="dispatch('open-code-snippet', { deviceId: {{ $device->id }} })">
+                                            <i class="bi bi-file-earmark-code"></i> Code
                                         </button>
+                                    </div>
 
-                                        <button class="btn btn-sm btn-outline-secondary w-100" title="Historical charts"
-                                                wire:click="dispatch('open-statistics',{deviceId:  {{ $device->id }}})">
-                                            <i class="bi bi-bar-chart-line"></i> Statistics
-                                        </button>
+                                    @isActive($device)
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-outline-primary w-100" title="Live measurements"
+                                                    wire:click="dispatch('open-measurement', { deviceId: {{ $device->id }} })">
+                                                <i class="bi bi-activity"></i> Measurement
+                                            </button>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-outline-secondary w-100" title="Historical charts"
+                                                    wire:click="dispatch('open-statistics', { deviceId: {{ $device->id }} })">
+                                                <i class="bi bi-bar-chart-line"></i> Statistics
+                                            </button>
+                                        </div>
 
                                         @canWrite($device)
-                                        <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
-                                                wire:click="dispatch('open-device-edit',{deviceId:  {{ $device->id }}})">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </button>
+                                            <div class="col-6">
+                                                <button class="btn btn-sm btn-outline-primary w-100" title="Edit"
+                                                        wire:click="dispatch('open-device-edit', { deviceId: {{ $device->id }} })">
+                                                    <i class="bi bi-pencil"></i> Edit
+                                                </button>
+                                            </div>
                                         @endcanWrite()
 
                                         @isOwner($device)
-                                        <button class="btn btn-sm btn-outline-info w-100" title="Edit"
-                                                wire:click="dispatch('open-share',{deviceId:  {{ $device->id }}})">
-                                            <i class="bi bi-share"></i> Share
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger w-100" title="Archive"
-                                                wire:click="deleteDevice({{ $device->id }})">
-                                            <i class="bi bi-archive"></i> Archive
-                                        </button>
+                                            <div class="col-6">
+                                                <button class="btn btn-sm btn-outline-info w-100" title="Share"
+                                                        wire:click="dispatch('open-share', { deviceId: {{ $device->id }} })">
+                                                    <i class="bi bi-share"></i> Share
+                                                </button>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <button class="btn btn-sm btn-outline-danger w-100" title="Archive"
+                                                        wire:click="deleteDevice({{ $device->id }})">
+                                                    <i class="bi bi-archive"></i> Archive
+                                                </button>
+                                            </div>
                                         @endisOwner()
                                     @else
                                         @isOwner($device)
-                                            <button class="btn btn-sm btn-outline-success w-100" title="Archive"
-                                                    wire:click="revokeDevice({{ $device->id }})">
-                                                <i class="bi bi-arrow-counterclockwise"></i> Revoke
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger w-100" title="Archive"
-                                                    wire:confirm="'Are you sure you want to delete this device?'"
-                                                    wire:click="forceDeleteDevice({{ $device->id }})">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
+                                            <div class="col-6">
+                                                <button class="btn btn-sm btn-outline-success w-100" title="Revoke"
+                                                        wire:click="revokeDevice({{ $device->id }})">
+                                                    <i class="bi bi-arrow-counterclockwise"></i> Revoke
+                                                </button>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <button class="btn btn-sm btn-outline-danger w-100" title="Delete"
+                                                        wire:confirm="Are you sure you want to delete this device?"
+                                                        wire:click="forceDeleteDevice({{ $device->id }})">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </div>
                                         @endisOwner()
                                     @endisActive
                                 </div>
